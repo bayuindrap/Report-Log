@@ -43,7 +43,8 @@ class RegisPage extends React.Component {
                 username: this.usernameRegis.value,
                 password: this.passRegis.value,
                 role: "user",
-                dept: this.deptRegis.value
+                dept: this.deptRegis.value,
+                report: []
             }).then((res) => {
                 console.log(res.data)
                 alert(`${this.usernameRegis.value}, Registration Complete`)

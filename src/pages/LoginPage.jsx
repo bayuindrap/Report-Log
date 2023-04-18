@@ -132,7 +132,7 @@ class LoginPage extends React.Component {
 }
 
 const mapToProps = ({ userReducer }) => {
-    // console.log("tes",userReducer.userList.id)
+    // console.log("tes id",userReducer.userList.id)
     return {
         iduser: userReducer.userList.id,
         username: userReducer.userList.username

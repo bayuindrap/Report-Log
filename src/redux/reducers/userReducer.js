@@ -10,6 +10,11 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 userList: action.payload
             }
+            case "GET_USER" :
+                return {
+                    ...state,
+                    userList: action.payload
+                }
             default :
             return state
     }       

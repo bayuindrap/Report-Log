@@ -3,27 +3,42 @@ import { API_URL } from "../helper";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button, FormText, InputGroup } from "reactstrap"
 import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import { connect } from 'react-redux';
+import { userAction } from '../redux/actions';
+
+
 
 
 
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            startDate: new Date(),
+            userList: []
+        }
     }
+
+    handleChange(date) {
+        this.setState({
+          startDate: date
+        })
+      } 
 
     componentDidMount() {
-        this.getData()
+        // this.getData()
     }
 
-    getData = () => {
-        axios.get(`${API_URL}/dataUser`)
-            .then((res) => {
-                console.log("res", res.data)
-            }).catch((err) => {
-                console.log(err)
-            })
-    }
+    // getData = () => {
+    //     axios.get(`${API_URL}/dataUser`)
+    //         .then((res) => {
+    //             console.log("res", res.data)
+    //             this.setState({userList: res.data})
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
 
 
     render() {
@@ -37,12 +52,7 @@ class HomePage extends React.Component {
                             <Label for="username">
                                 Username
                             </Label>
-                            <Input
-                                id="username"
-                                name="username"
-                                placeholder="username"
-                                type="text"
-                            />
+                           <p>{this.props.username}</p>
                         </FormGroup>
 
                         <FormGroup>
@@ -64,7 +74,7 @@ class HomePage extends React.Component {
                                     // selected={this.state.startDate}
                                     // onChange={this.handleChange}
                                     dateFormat="dd/MM/yyyy"
-                                // popperPlacement="bottom-fixed"
+                                    popperPlacement="bottom-fixed"
                                 />
                             </InputGroup>
                         </FormGroup>
@@ -90,5 +100,14 @@ class HomePage extends React.Component {
 }
 
 
+const mapToProps = ({ userReducer }) => {
+    console.log("tes id",userReducer.userList.username)
+    return {
+        // iduser: userReducer.userList.id,
+        username: userReducer.userList.username
+    }
+}
 
-export default HomePage;
+
+
+export default connect (mapToProps, {userAction})(HomePage);

@@ -5,12 +5,20 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage';
 import RegisPage from './pages/RegisPage';
+import { userAction } from "./redux/actions/userAction";
+import { connect } from 'react-redux';
 
 class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {}
   }
+
+
+componentDidMount() {
+  // this.props.userAction()
+}
+
   render () {
     return (
       <div>
@@ -24,4 +32,12 @@ class App extends React.Component {
   }
 }
 
-export default App
+// const mapToProps = ({ userReducer }) => {
+//   console.log("tes",userReducer.userList.username)
+//   return {
+//       // iduser: userReducer.userList.id,
+//       // username: userReducer.userList.username
+//   }
+// }
+
+export default App;

@@ -18,3 +18,19 @@ export const loginAction = (username, password) => {
         }
     }
 }
+
+
+export const userAction = () => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.get(`${API_URL}/dataUser`)
+            console.log("getuser",res)
+            dispatch({
+                type: "GET_USER",
+                payload: res.data[0]
+            })
+        }catch(error) {
+            console.log(error)
+        }
+    }
+}
