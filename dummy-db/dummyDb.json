@@ -1,0 +1,44 @@
+{
+  "dataUser": [
+    {
+      "username": "bayubay",
+      "password": "admin",
+      "role": "admin",
+      "id": 1
+    },
+    {
+      "username": "naruto",
+      "password": "naruto",
+      "role": "user",
+      "id": 2
+    },
+    {
+      "username": "test",
+      "password": "test",
+      "role": "user",
+      "dept": "test",
+      "id": 3
+    },
+    {
+      "username": "raw",
+      "password": "asda",
+      "role": "user",
+      "dept": "asda",
+      "id": 4
+    },
+    {
+      "username": "dfs",
+      "password": "sdfs",
+      "role": "user",
+      "dept": "sfs",
+      "id": 5
+    },
+    {
+      "username": "ssdfs",
+      "password": "fhtfg",
+      "role": "user",
+      "dept": "dfgdfg",
+      "id": 6
+    }
+  ]
+}
