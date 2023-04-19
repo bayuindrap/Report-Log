@@ -44,8 +44,9 @@ class LoginPage extends React.Component {
     getData = () => {
         axios.get(`${API_URL}/dataUser`)
             .then((res) => {
-                console.log("test data login", res.data)
-                this.setState({ datauser: res.data })
+                // console.log("test data login", res.data)
+                this.setState({ dataUser: res.data })
+                // console.log("ini state data", this.state.dataUser)
             }).catch((err) => {
                 console.log(err)
             })
@@ -53,18 +54,46 @@ class LoginPage extends React.Component {
 
 
 
+     checkLogin = (usernameLogin, passLogin) => {
+        for(let i = 0; i < this.state.dataUser.length; i++){
+            if(this.state.dataUser[i].username === usernameLogin && this.state.dataUser[i].password === passLogin){
+                return true
+            }
+        }
+        return false
+    }
+
     btnLogin = () => {
-        if (this.usernameLogin.value === "" || this.passLogin.value === "") {
-            alert("USERNAME & PASSWORD CAN'T BE EMPTY")
-        } else {
+        if(!this.checkLogin(this.usernameLogin.value, this.passLogin.value)){
+            return alert("USERNAME ATAU PASSWORD SALAH")
+        }else{
             this.props.loginAction(this.usernameLogin.value, this.passLogin.value)
-            // Swal.fire(
-            //     'Login Success',
-            //     `Welcome ${this.props.username}`,
-            //     'success'
-            //   )
         }
     }
+
+    // btnLogin = () => {
+    //     if (this.usernameLogin.value === "" || this.passLogin.value === "") {
+    //         alert("USERNAME & PASSWORD CAN'T BE EMPTY")
+    //     } else if (!this.checkLogin(this.usernameLogin.value, this.passLogin.value)) {
+    //         alert("USERNAME ATAU PASSWORD SALAH")
+    //     }else{
+    //         this.props.loginAction(this.usernameLogin.value, this.passLogin.value)
+        
+    //     }
+    // }
+
+    // btnLogin = () => {
+    //     if (this.usernameLogin.value === "" || this.passLogin.value === "") {
+    //         alert("USERNAME & PASSWORD CAN'T BE EMPTY")
+    //     } else {
+    //         this.props.loginAction(this.usernameLogin.value, this.passLogin.value)
+    //         // Swal.fire(
+    //         //     'Login Success',
+    //         //     `Welcome ${this.props.username}`,
+    //         //     'success'
+    //         //   )
+    //     }
+    // }
 
 
 
@@ -80,7 +109,7 @@ class LoginPage extends React.Component {
             return <Navigate to="/" />
         }
         return (
-            <div>
+            <div className='p-5 mt-5'>
                 <h1>
                     LOGIN PAGE
                 </h1>

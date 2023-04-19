@@ -61,7 +61,7 @@ class RegisPage extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='p-5 mt-5'>
                 <h5>Regis</h5>
 
 

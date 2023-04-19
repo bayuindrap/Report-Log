@@ -43,14 +43,14 @@ class HomePage extends React.Component {
 
     render() {
         return (
-            <div>
-                <h2>HOME PAGE</h2>
+            <div className='p-5 mt-5'>
+    
 
                 <div className='shadow p-3'>
                     <Form>
                         <FormGroup>
                             <Label for="username">
-                                Username
+                                Nama
                             </Label>
                            <p>{this.props.username}</p>
                         </FormGroup>
