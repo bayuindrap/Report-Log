@@ -5,10 +5,12 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisPage from './pages/RegisPage'
-import { userAction } from './redux/actions/userAction'
+import { loginAction, userAction } from './redux/actions/userAction'
 import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
+import ReportPage from './pages/ReportPage'
+
 
 class App extends React.Component {
   constructor (props) {
@@ -20,6 +22,25 @@ class App extends React.Component {
 
   componentDidMount () {
     // this.props.userAction()
+    this.keeplogin()
+  }
+
+  keeplogin = async () => {
+    try {
+      let local = JSON.parse(localStorage.getItem("data"))
+      if (local) {
+        let res = await this.props.loginAction(local.username, local.password)
+
+        if (res.success) {
+          this.setState({ loading : false })
+        }
+      } else {
+        this.setState({ loading : false })
+      }
+    }
+    catch (error) {
+      console.log(error)
+    }
   }
 
   render () {
@@ -27,9 +48,10 @@ class App extends React.Component {
       <div>
         <NavbarComp loading={this.state.loading}/>
           <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/login-page' element={<LoginPage />} />
+            <Route path='/' element={<LoginPage />} />
+            <Route path='/home-page' element={<HomePage />} />
             <Route path='/regis-page' element={<RegisPage />} />
+            <Route path='/report-page' element={<ReportPage />} />
           </Routes>
           <FooterComp/>
         
@@ -46,4 +68,10 @@ class App extends React.Component {
 //   }
 // }
 
-export default App
+const mapToProps = (state) => {
+  return {
+    role: state.userReducer.role
+  }
+}
+
+export default connect(mapToProps, { loginAction})(App);

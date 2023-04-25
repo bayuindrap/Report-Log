@@ -8,6 +8,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Swal from 'sweetalert2'
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { MdDriveFileRenameOutline } from "react-icons/md";
 
 
 
@@ -19,21 +20,8 @@ class LoginPage extends React.Component {
         this.state = {
             dataUser: [],
             passShow: <AiOutlineEyeInvisible />,
-            passType: "password"
-        }
-    }
-
-    showPass = () => {
-        if (this.state.passType == "password") {
-            this.setState({
-                passShow: <AiOutlineEye />,
-                passType: "text"
-            })
-        } else {
-            this.setState({
-                passShow: <AiOutlineEyeInvisible />,
-                passType: "password"
-            })
+            passType: "password",
+            passValue: ""
         }
     }
 
@@ -52,11 +40,35 @@ class LoginPage extends React.Component {
             })
     }
 
+    showPass = () => {
+        if (this.state.passType == "password") {
+            this.setState({
+                passShow: <AiOutlineEye />,
+                passType: "text"
+            })
+        } else {
+            this.setState({
+                passShow: <AiOutlineEyeInvisible />,
+                passType: "password"
+            })
+        }
+    }
+
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+        //   this.handleClick();
+        this.btnLogin()
+        }
+      };
+
+    //   handleClick = () => {
+    //     this.btnLogin()
+    //   };
 
 
-     checkLogin = (usernameLogin, passLogin) => {
-        for(let i = 0; i < this.state.dataUser.length; i++){
-            if(this.state.dataUser[i].username === usernameLogin && this.state.dataUser[i].password === passLogin){
+    checkLogin = (usernameLogin, passValue) => {
+        for (let i = 0; i < this.state.dataUser.length; i++) {
+            if (this.state.dataUser[i].username === usernameLogin && this.state.dataUser[i].password === passValue) {
                 return true
             }
         }
@@ -64,10 +76,10 @@ class LoginPage extends React.Component {
     }
 
     btnLogin = () => {
-        if(!this.checkLogin(this.usernameLogin.value, this.passLogin.value)){
+        if (!this.checkLogin(this.usernameLogin.value, this.state.passValue)) {
             return alert("USERNAME ATAU PASSWORD SALAH")
-        }else{
-            this.props.loginAction(this.usernameLogin.value, this.passLogin.value)
+        } else {
+            this.props.loginAction(this.usernameLogin.value, this.state.passValue)
         }
     }
 
@@ -78,7 +90,7 @@ class LoginPage extends React.Component {
     //         alert("USERNAME ATAU PASSWORD SALAH")
     //     }else{
     //         this.props.loginAction(this.usernameLogin.value, this.passLogin.value)
-        
+
     //     }
     // }
 
@@ -106,55 +118,70 @@ class LoginPage extends React.Component {
             //     `Welcome ${this.props.username}`,
             //     'success'
             //   )
-            return <Navigate to="/" />
+            return <Navigate to="/home-page" />
         }
         return (
             <div className='p-5 mt-5'>
-                <h1>
-                    LOGIN PAGE
+                <h1 style={{ textAlign: "center" }}>
+                    LOGIN
                 </h1>
 
-                <Col md={6}>
-                    <div className='shadow'>
-                        <Card>
-                            <Card.Body>
-                                <div>
-                                    <Col sm={6}>
-                                        <FormGroup>
-                                            <Form.Label>Username</Form.Label>
-                                            <InputGroup>
-                                                {/* <Form.Control type="text" placeholder="Input Username" 
+                {/* <Col md={6}> */}
+                <div className='shadow'>
+                    <Card>
+                        <Card.Body>
+                            <div>
+                                {/* <Col sm={6}> */}
+                                <FormGroup>
+                                    <Form.Label>Username</Form.Label>
+                                    <InputGroup>
+                                        {/* <Form.Control type="text" placeholder="Input Username" 
                                              innerRef={(element) => this.usernameLogin = element}/> */}
-                                                <Input type="text" placeholder="Input Username"
-                                                    innerRef={(element) => this.usernameLogin = element} />
-                                            </InputGroup>
-                                        </FormGroup>
-                                    </Col>
+                                        <Input type="text" placeholder="Input Username"
+                                            innerRef={(element) => this.usernameLogin = element} />
+                                             <InputGroupText><MdDriveFileRenameOutline/></InputGroupText>
+                                    </InputGroup>
+                                </FormGroup>
+                                {/* </Col> */}
 
-                                    <Col sm={6}>
-                                        <FormGroup>
-                                            <Form.Label>Password</Form.Label>
-                                            <InputGroup>
-                                                {/* <Form.Control type="text" placeholder="Input Password"
+                                {/* <Col sm={6}> */}
+                                <FormGroup>
+                                    <Form.Label>Password</Form.Label>
+                                    <InputGroup>
+                                        {/* <Form.Control type="text" placeholder="Input Password"
                                                 innerRef={(element) => this.passLogin = element} /> */}
-                                                <Input placeholder="Input Password"
-                                                    innerRef={(element) => this.passLogin = element} type={this.state.passType} />
-                                                <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
-                                                    {this.state.passShow}
-                                                </InputGroupText>
+                                        {/* <Input placeholder="Input Password"
+                                            innerRef={(element) => this.passLogin = element} type={this.state.passType} /> */}
 
-                                            </InputGroup>
-                                        </FormGroup>
-                                    </Col>
+                                            <Input
+                                            placeholder="Input Password"
+                                            type={this.state.passType}
+                                            value={this.state.passValue}
+                                            onChange={(e) => this.setState({ passValue: e.target.value })}
+                                            onKeyDown={this.handleKeyPress}
+                                            />
 
-                                    <Col sm={6}>
-                                        <Button onClick={this.btnLogin}>LOGIN</Button>
-                                    </Col>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    </div>
-                </Col>
+                                            
+                                        <InputGroupText style={{ cursor: "pointer" }} onClick={this.showPass}>
+                                            {this.state.passShow}
+                                        </InputGroupText>
+
+                                    </InputGroup>
+                                </FormGroup>
+                                {/* </Col> */}
+
+                                
+                            </div>
+                            <div>
+                                <Col xs={6}>
+                                    <Button style={{ width: 200, borderRadius: 50, marginTop: 15, alignContent: "center", backgroundColor: "green" }} onClick={this.btnLogin}>LOGIN</Button>
+                                </Col>
+                            </div>
+
+                        </Card.Body>
+                    </Card>
+                </div>
+                {/* </Col> */}
             </div>
         );
     }

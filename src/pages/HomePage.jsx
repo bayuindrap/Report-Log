@@ -2,6 +2,7 @@ import React from 'react';
 import { API_URL } from "../helper";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button, FormText, InputGroup } from "reactstrap"
+import {Col} from "react-bootstrap"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import { connect } from 'react-redux';
@@ -22,9 +23,9 @@ class HomePage extends React.Component {
 
     handleChange(date) {
         this.setState({
-          startDate: date
+            startDate: date
         })
-      } 
+    }
 
     componentDidMount() {
         // this.getData()
@@ -44,7 +45,7 @@ class HomePage extends React.Component {
     render() {
         return (
             <div className='p-5 mt-5'>
-    
+
 
                 <div className='shadow p-3'>
                     <Form>
@@ -52,7 +53,7 @@ class HomePage extends React.Component {
                             <Label for="username">
                                 Nama
                             </Label>
-                           <p>{this.props.username}</p>
+                            <p>{this.props.username}</p>
                         </FormGroup>
 
                         <FormGroup>
@@ -88,9 +89,15 @@ class HomePage extends React.Component {
                                 name="file"
                                 type="file" />
                         </FormGroup>
-                        <Button>
+
+                        <div>
+                            <Col xs={6}>
+                                <Button color="success" style={{ width: 200, borderRadius: 50, marginTop: 15 }} onClick={this.btnRegis}>SUBMIT</Button>
+                            </Col>
+                        </div>
+                        {/* <Button>
                             Submit
-                        </Button>
+                        </Button> */}
                     </Form>
                 </div>
             </div>
@@ -101,7 +108,7 @@ class HomePage extends React.Component {
 
 
 const mapToProps = ({ userReducer }) => {
-    console.log("tes id",userReducer.userList.username)
+    console.log("tes id", userReducer.userList.username)
     return {
         // iduser: userReducer.userList.id,
         username: userReducer.userList.username
@@ -110,4 +117,4 @@ const mapToProps = ({ userReducer }) => {
 
 
 
-export default connect (mapToProps, {userAction})(HomePage);
+export default connect(mapToProps, { userAction })(HomePage);

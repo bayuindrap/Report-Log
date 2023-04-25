@@ -34,3 +34,9 @@ export const userAction = () => {
         }
     }
 }
+
+export const logoutAction = () => {
+    return {
+        type: "LOGOUT"
+    }
+}

@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button, Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, NavLink, UncontrolledDropdown, DropdownMenu, DropdownItem, NavbarText, DropdownToggle, Spinner } from "reactstrap";
-// import { logoutAction } from "../redux/actions/userAction";
 import { connect } from "react-redux";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import { FaMoneyBillAlt } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
+import { logoutAction } from "../redux/actions";
+import { MdOutlineReportProblem } from "react-icons/md";
+import { FiUsers, FiLogOut } from "react-icons/fi";
+
 
 
 
@@ -19,7 +19,7 @@ class NavbarComp extends React.Component {
             <div>
                 <Navbar expand="md" fixed="top" color="light">
                 <NavbarBrand>
-                    <Link to="/">
+                    <Link to="/home-page">
                         <img src="https://i.postimg.cc/X7sXFBSM/icon-lotte-logoshape.png" alt="logo-brand" width="40px" />
                     </Link>
                 </NavbarBrand>
@@ -27,7 +27,7 @@ class NavbarComp extends React.Component {
                 <Collapse isOpen={this.state.openCollapse} navbar>
                     <Nav>
                         <NavItem>
-                            <Link className="nav-link" to="/" style={{ color: "#ED1C24" }}>
+                            <Link className="nav-link" to="/home-page" style={{ color: "#ED1C24" }}>
                                 Home Page
                             </Link>
                         </NavItem>
@@ -49,20 +49,22 @@ class NavbarComp extends React.Component {
                                             ?
 
                                             <DropdownMenu right>
-                                                <Link to="/" style={{ color: "#159953", textDecoration: "none" }}>
-                                                    <DropdownItem style={{color: "#159953"}}>
-                                                        Report Page  
+                                                <Link to="/home-page" style={{ color: "#159953", textDecoration: "none" }}>
+                                                    <DropdownItem style={{color: "#black"}}>
+                                                    <MdOutlineReportProblem/> Report Page  
                                                     </DropdownItem>
                                                 </Link>
                                                 <Link to="/" style={{ color: "#159953", textDecoration: "none" }}>
-                                                    <DropdownItem style={{color: "#159953"}}>
+                                                    <DropdownItem style={{color: "#black"}}>
                                                         ====/////======
                                                     </DropdownItem>
                                                 </Link>
                                                 <DropdownItem divider/>
                                                 <DropdownItem onClick={() => {
                                                     localStorage.removeItem("data");
-                                                    // this.props.logoutAction();
+                                                    this.props.logoutAction();
+                                                    <Navigate to="/"/>
+                                                    window.location.href = "/"
                                                 }} style={{color: "red"}}>
                                                     <FiLogOut/> Logout 
                                                 </DropdownItem>
@@ -71,22 +73,24 @@ class NavbarComp extends React.Component {
                                             :
 
                                             <DropdownMenu right >
-                                                <Link to="/product-management" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
-                                                    <DropdownItem style={{color: "#159953"}}>
-                                                        Report List
+                                                <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                    <DropdownItem style={{color: "#black"}}>
+                                                        <MdOutlineReportProblem/> Report List
                                                     </DropdownItem>
                                                 </Link>
-                                                <Link to="/transaction-admin" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
-                                                    <DropdownItem style={{color: "#159953"}}>
-                                                        Management
+                                                <Link to="/regis-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                    <DropdownItem style={{color: "#black"}}>
+                                                       <FiUsers/> User Management
                                                     </DropdownItem>
                                                 </Link>
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => {
                                                     localStorage.removeItem("data");
-                                                    // this.props.logoutAction();
+                                                    this.props.logoutAction();
+                                                    <Navigate to="/"/>
+                                                    window.location.href = "/"
                                                 }} style={{color: "red"}}>
-                                                    Logout
+                                                   <FiLogOut/> Logout
                                                 </DropdownItem>
                                             </DropdownMenu>
 
@@ -96,13 +100,13 @@ class NavbarComp extends React.Component {
                                 :
 
                                 <Nav style={{ marginLeft: "auto" }}>
-                                    <NavItem>
+                                    {/* <NavItem>
                                         <Link className="nav-link" to="/register-page" style={{ color: "#ED1C24" }}>
                                             Register
                                         </Link>
-                                    </NavItem>
+                                    </NavItem> */}
                                     <NavItem>
-                                        <Link className="nav-link" to="/login-page" style={{ color: "#ED1C24" }}>
+                                        <Link className="nav-link" to="/" style={{ color: "#ED1C24" }}>
                                             Login
                                         </Link>
                                     </NavItem>
@@ -143,4 +147,4 @@ const mapToProps = ({ userReducer }) => {
     }
 }
  
-export default connect (mapToProps) (NavbarComp);
+export default connect (mapToProps, {logoutAction}) (NavbarComp);
