@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { logoutAction } from "../redux/actions";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { FiUsers, FiLogOut } from "react-icons/fi";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 
 
@@ -76,6 +77,11 @@ class NavbarComp extends React.Component {
                                                 <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
                                                     <DropdownItem style={{color: "#black"}}>
                                                         <MdOutlineReportProblem/> Report List
+                                                    </DropdownItem>
+                                                </Link>
+                                                <Link to="/report-log" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                    <DropdownItem style={{color: "#black"}}>
+                                                      <HiOutlineDocumentReport/> Report Log History
                                                     </DropdownItem>
                                                 </Link>
                                                 <Link to="/regis-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">

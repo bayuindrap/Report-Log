@@ -118,7 +118,10 @@ class LoginPage extends React.Component {
             //     `Welcome ${this.props.username}`,
             //     'success'
             //   )
-            return <Navigate to="/home-page" />
+            if (this.props.role == "user") {
+                return <Navigate to="/home-page" />
+            }
+            return <Navigate to="report-page" />
         }
         return (
             <div className='p-5 mt-5'>
@@ -191,7 +194,8 @@ const mapToProps = ({ userReducer }) => {
     // console.log("tes id",userReducer.userList.id)
     return {
         iduser: userReducer.userList.id,
-        username: userReducer.userList.username
+        username: userReducer.userList.username,
+        role: userReducer.userList.role
     }
 }
 

@@ -10,6 +10,8 @@ import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
 import ReportPage from './pages/ReportPage'
+import ReportLog from './pages/ReportLog'
+
 
 
 class App extends React.Component {
@@ -52,6 +54,7 @@ class App extends React.Component {
             <Route path='/home-page' element={<HomePage />} />
             <Route path='/regis-page' element={<RegisPage />} />
             <Route path='/report-page' element={<ReportPage />} />
+            <Route path='/report-log' element={<ReportLog/>} />
           </Routes>
           <FooterComp/>
         
