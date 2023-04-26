@@ -40,3 +40,15 @@ export const logoutAction = () => {
         type: "LOGOUT"
     }
 }
+
+// export const updateReport = (data, iduser) => {
+//     return async (dispatch) => {
+//         try {
+//             let res = await axios.post(`${API_URL}/report/${iduser}`, {
+
+//             })
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     }
+// }

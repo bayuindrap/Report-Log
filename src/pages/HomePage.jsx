@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import { connect } from 'react-redux';
 import { userAction } from '../redux/actions';
+import { Navigate } from "react-router-dom";
 
 
 
@@ -17,8 +18,12 @@ class HomePage extends React.Component {
         super(props);
         this.state = {
             startDate: new Date(),
-            userList: []
+            userList: [],
+            fileData: ""
         }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFileChange = this.handleFileChange.bind(this);
     }
 
     handleChange(date) {
@@ -27,9 +32,32 @@ class HomePage extends React.Component {
         })
     }
 
-    componentDidMount() {
-        // this.getData()
-    }
+    handleFileChange(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.setState({ fileData: event.target.result });
+        };
+        reader.readAsText(file);
+      }
+
+      handleFileInputChange(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+    
+        reader.onloadend = () => {
+          this.setState({
+            imageUrl: reader.result,
+          });
+        };
+    
+        reader.readAsDataURL(file);
+      }
+    
+
+    // componentDidMount() {
+    //     // this.getData()
+    // }
 
     // getData = () => {
     //     axios.get(`${API_URL}/dataUser`)
@@ -40,6 +68,31 @@ class HomePage extends React.Component {
     //             console.log(err)
     //         })
     // }
+
+
+    btnSubmit = () => {
+        if (this.reportDetail.value === "") {
+                alert ("isi semua data report")
+            } else {
+                axios.post(`${API_URL}/report`,{
+                    iduser: this.props.id,
+                    username: this.props.username,
+                    date: this.state.startDate.toLocaleDateString(),
+                    detail:[this.reportDetail.value],
+                    status: "On Check"
+                }).then((res) => {
+                    // console.log("post report", res)
+                    // console.log(res.data.detail.length > 1)
+                    if (res.data.detail !== "") {
+                        alert("data berhasil ditambahkan")
+                        window.location.reload()
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                })
+  
+        }
+    }
 
 
     render() {
@@ -61,9 +114,11 @@ class HomePage extends React.Component {
                                 Input Report
                             </Label>
                             <Input
+                                placeholder='isi detail report'
                                 id="report"
                                 name="text"
                                 type="textarea"
+                                innerRef={(element) => this.reportDetail = element}
                             />
                         </FormGroup>
 
@@ -72,8 +127,8 @@ class HomePage extends React.Component {
                             <InputGroup>
                                 <DatePicker
                                     className="mb-4 w-100"
-                                    // selected={this.state.startDate}
-                                    // onChange={this.handleChange}
+                                    selected={this.state.startDate}
+                                    onChange={this.handleChange}
                                     dateFormat="dd/MM/yyyy"
                                     popperPlacement="bottom-fixed"
                                 />
@@ -87,12 +142,13 @@ class HomePage extends React.Component {
                             <Input
                                 id="file"
                                 name="file"
-                                type="file" />
+                                type="file"
+                                onChange={this.handleFileChange} />
                         </FormGroup>
 
                         <div>
                             <Col xs={6}>
-                                <Button color="success" style={{ width: 200, borderRadius: 50, marginTop: 15 }} onClick={this.btnRegis}>SUBMIT</Button>
+                                <Button color="success" style={{ width: 200, borderRadius: 50, marginTop: 15 }} onClick={this.btnSubmit}>SUBMIT</Button>
                             </Col>
                         </div>
                         {/* <Button>
@@ -111,7 +167,8 @@ const mapToProps = ({ userReducer }) => {
     console.log("tes id", userReducer.userList.username)
     return {
         // iduser: userReducer.userList.id,
-        username: userReducer.userList.username
+        username: userReducer.userList.username,
+        id: userReducer.userList.id
     }
 }
 
