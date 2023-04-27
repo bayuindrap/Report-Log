@@ -94,6 +94,7 @@ class HomePage extends React.Component {
                 name: this.props.username,
                 corp: this.state.selectedValue,
                 orderid: this.orderId.value,
+                productcd: this.productCode.value,
                 datetransaction: this.state.startDate.toLocaleDateString(),
                 date: this.state.startDate2.toLocaleDateString(),
                 detail: [this.caseDesc.value],
@@ -204,7 +205,7 @@ class HomePage extends React.Component {
                                 </InputGroup>
                             </FormGroup>
 
-                            <FormGroup>
+                            {/* <FormGroup>
                                 <Label for="file">
                                     Input Screenshot
                                 </Label>
@@ -213,7 +214,7 @@ class HomePage extends React.Component {
                                     name="file"
                                     type="file"
                                     onChange={this.handleFileChange} />
-                            </FormGroup>
+                            </FormGroup> */}
 
                             <div>
                                 <Col xs={6}>

@@ -19,15 +19,22 @@ class RegisPage extends React.Component {
             passShow: <AiOutlineEyeInvisible />,
             passType: "password",
             passValue: "",
-            selectedValue: ''
+            selectedValue: '',
+            selectedRole: '',
             
         }
 
         this.handleSelectChange = this.handleSelectChange.bind(this);
+        this.handleSelectRole = this.handleSelectRole.bind(this);
     }
 
     handleSelectChange(event) {
         this.setState({ selectedValue: event.target.value });
+      }
+
+
+    handleSelectRole(event) {
+        this.setState({ selectedRole: event.target.value });
       }
 
 
@@ -120,11 +127,20 @@ class RegisPage extends React.Component {
                                 <FormGroup>
                                     <Form.Label>Department</Form.Label>
                                     <InputGroup>
-                                        {/* <Form.Control type="text" placeholder="Input Password"
-                                                innerRef={(element) => this.passLogin = element} /> */}
                                         <Input type="select" placeholder="Input Department" value={this.state.selectedValue} onChange={this.handleSelectChange}>
-                                            <option value="">Select an option</option>
+                                            <option value="">Select Department</option>
                                             <option value="operation">Operation</option>
+                                            <option value="admin">Admin</option>
+                                        </Input>
+                                    </InputGroup>
+                                </FormGroup>
+
+                                <FormGroup>
+                                    <Form.Label>Role</Form.Label>
+                                    <InputGroup>
+                                        <Input type="select" placeholder="Input Department" value={this.state.selectedRole} onChange={this.handleSelectRole}>
+                                            <option value="">Select Role</option>
+                                            <option value="user">User</option>
                                             <option value="admin">Admin</option>
                                         </Input>
                                     </InputGroup>

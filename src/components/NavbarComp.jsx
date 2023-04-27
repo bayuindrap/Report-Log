@@ -106,11 +106,6 @@ class NavbarComp extends React.Component {
                                 :
 
                                 <Nav style={{ marginLeft: "auto" }}>
-                                    {/* <NavItem>
-                                        <Link className="nav-link" to="/register-page" style={{ color: "#ED1C24" }}>
-                                            Register
-                                        </Link>
-                                    </NavItem> */}
                                     <NavItem>
                                         <Link className="nav-link" to="/" style={{ color: "#ED1C24" }}>
                                             Login
@@ -119,23 +114,6 @@ class NavbarComp extends React.Component {
                                 </Nav>
 
                     }
-
-                    
-                    {/* <Link to="/login-page" style={{ marginLeft: "auto" }}>
-                        <Button type="button" color="danger">Sign In</Button>
-                    </Link>
-                    <div style={{ float: "right" }}>
-
-                        <Nav >
-                            <NavItem>
-                                <Link className="nav-link" to="/regis-page" style={{ color: "#ED1C24" }}>
-                                    Register
-                                </Link>
-                            </NavItem>
-                        </Nav>
-                    </div> */}
-
-
 
                 </Collapse>
             </Navbar>
