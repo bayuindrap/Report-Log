@@ -6,6 +6,7 @@ import { logoutAction } from "../redux/actions";
 import { MdOutlineReportProblem } from "react-icons/md";
 import { FiUsers, FiLogOut } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
+import { GrStatusInfo } from "react-icons/gr";
 
 
 
@@ -55,9 +56,9 @@ class NavbarComp extends React.Component {
                                                     <MdOutlineReportProblem/> Report Page  
                                                     </DropdownItem>
                                                 </Link>
-                                                <Link to="/" style={{ color: "#159953", textDecoration: "none" }}>
+                                                <Link to="/status-page" style={{ color: "#159953", textDecoration: "none" }}>
                                                     <DropdownItem style={{color: "#black"}}>
-                                                        ====/////======
+                                                     <GrStatusInfo/>   Status Page
                                                     </DropdownItem>
                                                 </Link>
                                                 <DropdownItem divider/>

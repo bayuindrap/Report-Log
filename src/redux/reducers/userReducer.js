@@ -1,11 +1,13 @@
 const INITIAL_STATE = {
-    userList : []
+    userList : [],
+    reportList: [],
+    reportHistory: []
 }
 
 export const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case "LOGIN_SUCCESS" :
-            console.log("data reducer", action.payload)
+            // console.log("data reducer", action.payload)
             return {
                 ...state,
                 userList: action.payload
@@ -14,6 +16,13 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                 return {
                     ...state,
                     userList: action.payload
+                }
+
+            case "GET_REPORT" :
+                // console.log("reducer report", action.payload)
+                return {
+                    ...state,
+                    reportList: action.payload
                 }
 
             case "LOGOUT":

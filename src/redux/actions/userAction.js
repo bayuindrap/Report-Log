@@ -1,6 +1,8 @@
 import axios from "axios"
 import { API_URL } from "../../helper"
 
+
+
 export const loginAction = (username, password) => {
     return async (dispatch) => {
         try {
@@ -35,11 +37,49 @@ export const userAction = () => {
     }
 }
 
+export const reportAction = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await axios.get(`${API_URL}/report`)
+            // console.log("data report", res.data)
+            dispatch({
+                type: "GET_REPORT",
+                payload: res.data
+            })
+        }catch(error) {
+            console.log(error)
+        }
+    }
+}
+
+
+export const historyAction = () => {
+    return async (dispatch) => {
+        try {
+            let res = await axios.get(`${API_URL}/report?iduser=${this.props.iduser}`)
+            console.log("data report", res.data)
+            dispatch({
+                type: "GET_HISTORY",
+                payload: res.data
+            })
+        }catch(error) {
+            console.log(error)
+        }
+    }
+}
+
 export const logoutAction = () => {
     return {
         type: "LOGOUT"
     }
 }
+
+// export const GET_SPECIFIC_DATA = "GET_SPECIFIC_DATA";
+// export const getSpecificData = (id) => ({
+//     type: "GET_SPECIFIC_DATA",
+//     payload: { id },
+//   });
+
 
 // export const updateReport = (data, iduser) => {
 //     return async (dispatch) => {

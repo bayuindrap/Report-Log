@@ -8,7 +8,7 @@ class FooterComp extends React.Component {
     }
     render() {
         return (
-            <div style={{textAlign: "center", height: "40px"}}>
+            <div style={{textAlign: "center", height: "40px", fixed: "bottom"}}>
                 <CardFooter style={{color: "AAC8A7"}}>
                 © 2023  PT. Lotte Indonesia. All rights reserved
                 </CardFooter>

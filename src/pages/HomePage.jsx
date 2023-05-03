@@ -21,18 +21,19 @@ class HomePage extends React.Component {
             startDate2: new Date(),
             userList: [],
             fileData: "",
-            selectedValue: ""
+            selectedValue: "",
+            selectedCorp: ""
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeReport = this.handleChangeReport.bind(this);
-        this.handleFileChange = this.handleFileChange.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
     }
 
     handleSelectChange(event) {
         this.setState({ selectedValue: event.target.value });
     }
+
 
     handleChange(date) {
         this.setState({
@@ -46,42 +47,35 @@ class HomePage extends React.Component {
         })
     }
 
-    handleFileChange(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            this.setState({ fileData: event.target.result });
-        };
-        reader.readAsText(file);
-    }
-
-    handleFileInputChange(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            this.setState({
-                imageUrl: reader.result,
-            });
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-
-    // componentDidMount() {
-    //     // this.getData()
+    // handleFileChange(event) {
+    //     const file = event.target.files[0];
+    //     const reader = new FileReader();
+    //     reader.onload = (event) => {
+    //         this.setState({ fileData: event.target.result });
+    //     };
+    //     reader.readAsText(file);
     // }
 
-    // getData = () => {
-    //     axios.get(`${API_URL}/dataUser`)
-    //         .then((res) => {
-    //             console.log("res", res.data)
-    //             this.setState({userList: res.data})
-    //         }).catch((err) => {
-    //             console.log(err)
-    //         })
+    // handleFileInputChange(event) {
+    //     const file = event.target.files[0];
+    //     const reader = new FileReader();
+
+    //     reader.onloadend = () => {
+    //         this.setState({
+    //             imageUrl: reader.result,
+    //         });
+    //     };
+
+    //     reader.readAsDataURL(file);
     // }
+
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+        //   this.handleClick();
+        this.btnSubmit()
+        }
+      };
+
 
 
     btnSubmit = () => {
@@ -89,15 +83,19 @@ class HomePage extends React.Component {
             this.caseDesc.value === "" || this.productCode === "") {
             alert("isi semua data report")
         } else {
+            const [corp, url] = this.state.selectedValue.split(",")
+            // console.log("ini corp", corp)
+            // console.log("ini url", url)
             axios.post(`${API_URL}/report`, {
                 iduser: this.props.id,
                 name: this.props.username,
-                corp: this.state.selectedValue,
+                corp: corp,
+                imgcorp: url,
                 orderid: this.orderId.value,
                 productcd: this.productCode.value,
                 datetransaction: this.state.startDate.toLocaleDateString(),
                 date: this.state.startDate2.toLocaleDateString(),
-                detail: [this.caseDesc.value],
+                detail: this.caseDesc.value,
                 status: "On Check"
             }).then((res) => {
                 // console.log("post report", res)
@@ -119,7 +117,7 @@ class HomePage extends React.Component {
             // <Col sm={11}>
                 <div className='p-5 mt-5' style={{}} >
 
-
+                        <h1 style={{textAlign: "center"}}>REPORT PAGE</h1>
                     <div className='shadow p-3'>
                         <Form>
                             <FormGroup>
@@ -132,12 +130,11 @@ class HomePage extends React.Component {
                             <FormGroup>
                                 <Label>Corp</Label>
                                 <InputGroup>
-                                    {/* <Form.Control type="text" placeholder="Input Password"
-                                                innerRef={(element) => this.passLogin = element} /> */}
                                     <Input type="select" placeholder="Pilih Corp" value={this.state.selectedValue} onChange={this.handleSelectChange}>
                                         <option value="">Select corp</option>
-                                        <option value="LMI">LMI</option>
-                                        <option value="LSI">LSI</option>
+                                        <option value="LMI,https://i.postimg.cc/wvqr8n0q/logo-LMM-01.png">LMI</option>
+                                        {/* <option value="LSI,https://i.postimg.cc/7LVBVmDp/LOGO-LSI.png">LSI</option> */}
+                                        <option value="LSI,https://i.postimg.cc/DfqYgnh5/LSI-LOGO.png">LSI</option>
                                     </Input>
                                 </InputGroup>
                             </FormGroup>
@@ -149,33 +146,8 @@ class HomePage extends React.Component {
                                 <Input
                                     placeholder='fill order id'
                                     id="order"
-                                    type="number"
+                                    type="text"
                                     innerRef={(element) => this.orderId = element}
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="report">
-                                    Case Description
-                                </Label>
-                                <Input
-                                    placeholder='fill case description report'
-                                    id="report"
-                                    name="text"
-                                    type="textarea"
-                                    innerRef={(element) => this.caseDesc = element}
-                                />
-                            </FormGroup>
-
-                            <FormGroup>
-                                <Label for="report">
-                                    Product Code
-                                </Label>
-                                <Input
-                                    placeholder='fill code product'
-                                    id="order"
-                                    type="number"
-                                    innerRef={(element) => this.productCode = element}
                                 />
                             </FormGroup>
 
@@ -204,6 +176,34 @@ class HomePage extends React.Component {
                                     />
                                 </InputGroup>
                             </FormGroup>
+
+                            <FormGroup>
+                                <Label for="report">
+                                    Product Code
+                                </Label>
+                                <Input
+                                    placeholder='fill code product'
+                                    id="order"
+                                    type="number"
+                                    innerRef={(element) => this.productCode = element}
+
+                                />
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Label for="report">
+                                    Case Description
+                                </Label>
+                                <Input
+                                    placeholder='fill case description report'
+                                    id="report"
+                                    name="text"
+                                    type="textarea"
+                                    innerRef={(element) => this.caseDesc = element}
+                                    onKeyDown={this.handleKeyPress}
+                                />
+                            </FormGroup>
+
 
                             {/* <FormGroup>
                                 <Label for="file">
