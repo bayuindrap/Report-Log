@@ -2,14 +2,14 @@ import React from 'react';
 import { API_URL } from "../helper";
 import axios from "axios";
 import { Form, FormGroup, Label, Input, Button, FormText, InputGroup } from "reactstrap"
+import { Image } from "react-bootstrap"
 import { Col } from "react-bootstrap"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import { connect } from 'react-redux';
 import { userAction } from '../redux/actions';
 import { Navigate } from "react-router-dom";
-
-
+import lotteLoading from "../assets/Logo-Lotte.gif"
 
 
 
@@ -22,7 +22,8 @@ class HomePage extends React.Component {
             userList: [],
             fileData: "",
             selectedValue: "",
-            selectedCorp: ""
+            selectedCorp: "",
+            isLoading: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -46,6 +47,8 @@ class HomePage extends React.Component {
             startDate2: date
         })
     }
+
+    
 
     // handleFileChange(event) {
     //     const file = event.target.files[0];
@@ -96,11 +99,14 @@ class HomePage extends React.Component {
                 datetransaction: this.state.startDate.toLocaleDateString(),
                 date: this.state.startDate2.toLocaleDateString(),
                 detail: this.caseDesc.value,
-                status: "On Check"
+                status: "On Check🔎"
             }).then((res) => {
                 // console.log("post report", res)
                 // console.log(res.data.detail.length > 1)
                 if (res.data.detail !== "") {
+                    this.setState({
+                        isLoading: true
+                    })
                     alert("data berhasil ditambahkan")
                     window.location.reload()
                 }
@@ -114,7 +120,10 @@ class HomePage extends React.Component {
 
     render() {
         return (
-            // <Col sm={11}>
+        
+                this.state.isLoading ? <Image fluid src={lotteLoading}  width={50} height={50}/> 
+                :
+            
                 <div className='p-5 mt-5' style={{}} >
 
                         <h1 style={{textAlign: "center"}}>REPORT PAGE</h1>
@@ -201,6 +210,7 @@ class HomePage extends React.Component {
                                     type="textarea"
                                     innerRef={(element) => this.caseDesc = element}
                                     onKeyDown={this.handleKeyPress}
+
                                 />
                             </FormGroup>
 
@@ -227,7 +237,7 @@ class HomePage extends React.Component {
                         </Form>
                     </div>
                 </div>
-            // </Col>
+            
 
         );
     }

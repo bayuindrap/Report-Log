@@ -80,7 +80,7 @@ class NavbarComp extends React.Component {
                                                         <MdOutlineReportProblem/> Report List
                                                     </DropdownItem>
                                                 </Link>
-                                                <Link to="/report-log" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                <Link to="/track-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
                                                     <DropdownItem style={{color: "#black"}}>
                                                       <HiOutlineDocumentReport/> Report Log History
                                                     </DropdownItem>

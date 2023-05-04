@@ -12,6 +12,7 @@ import FooterComp from './components/FooterComp'
 import ReportPage from './pages/ReportPage'
 import ReportLog from './pages/ReportLog'
 import StatusPage from './pages/StatusPage'
+import TrackingPage from './pages/TrackingPage'
 
 
 
@@ -59,6 +60,7 @@ class App extends React.Component {
             <Route path='/home-page' element={<HomePage />} />
             <Route path='/regis-page' element={<RegisPage />} />
             <Route path='/status-page' element={<StatusPage/>} />
+            <Route path='/track-page' element={<TrackingPage/>} />
             <Route path='/report-page' element={<ReportPage />} />
             <Route path='/report-log' element={<ReportLog/>} />
           </Routes>
