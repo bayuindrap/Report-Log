@@ -9,6 +9,7 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import Swal from 'sweetalert2'
 
 
 
@@ -55,17 +56,33 @@ class RegisPage extends React.Component {
 
     btnRegis = () => {
         if (this.usernameRegis.value === "" || this.passRegis.value === "" || this.state.selectedValue === "") {
-            alert("ISI SEMUA DATA")
+            // alert("ISI SEMUA DATA")
+            return Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: `Form data can't be empty.`,
+                showConfirmButton: false,
+                timer: 775,
+                width: "223px"
+              })
         } else {
             axios.post(`${API_URL}/dataUser`, {
                 username: this.usernameRegis.value,
                 password: this.passRegis.value,
-                role: "user",
+                role: this.state.selectedRole,
                 dept: this.state.selectedValue,
                 report: []
             }).then((res) => {
                 console.log(res.data)
-                alert(`${this.usernameRegis.value}, Registration Complete`)
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: `Registration Complete`,
+                    showConfirmButton: false,
+                    timer: 1150,
+                    width: "250px"
+                  })
+                // alert(`${this.usernameRegis.value}, Registration Complete`)
                 // if (res.data.length > 0) {
                 //     return <Navigate to="/login-page" />
                 // }
@@ -138,7 +155,7 @@ class RegisPage extends React.Component {
                                 <FormGroup>
                                     <Form.Label>Role</Form.Label>
                                     <InputGroup>
-                                        <Input type="select" placeholder="Input Department" value={this.state.selectedRole} onChange={this.handleSelectRole}>
+                                        <Input type="select" placeholder="Select Role" value={this.state.selectedRole} onChange={this.handleSelectRole}>
                                             <option value="">Select Role</option>
                                             <option value="user">User</option>
                                             <option value="admin">Admin</option>

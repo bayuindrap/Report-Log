@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { userAction } from '../redux/actions';
 import { Navigate } from "react-router-dom";
 import lotteLoading from "../assets/Logo-Lotte.gif"
+import Swal from 'sweetalert2'
 
 
 
@@ -23,7 +24,8 @@ class HomePage extends React.Component {
             fileData: "",
             selectedValue: "",
             selectedCorp: "",
-            isLoading: false
+            isLoading: false,
+            selectedDate: null
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -48,7 +50,20 @@ class HomePage extends React.Component {
         })
     }
 
-    
+    handleSubmit = (event) => {
+        event.preventDefault();
+
+        // If datepicker is not selected, send empty string
+
+        // Send data to the database
+        // sendDataToDatabase(dateToSend);
+
+    };
+
+    handleDateChange = (date) => {
+        this.setState({ selectedDate: date });
+    };
+
 
     // handleFileChange(event) {
     //     const file = event.target.files[0];
@@ -74,17 +89,29 @@ class HomePage extends React.Component {
 
     handleKeyPress = (event) => {
         if (event.key === 'Enter') {
-        //   this.handleClick();
-        this.btnSubmit()
+            //   this.handleClick();
+            this.btnSubmit()
         }
-      };
+    };
+
+    // setTimeout(reload ()  {
+    //     window.location.reload();
+    //   }, 5000);
 
 
 
     btnSubmit = () => {
-        if (this.state.selectedValue === "" || this.orderId.value === "" || 
-            this.caseDesc.value === "" || this.productCode === "") {
-            alert("isi semua data report")
+        const dateToSend = this.state.selectedDate ? this.state.selectedDate.toLocaleDateString() : "";
+        if (this.state.selectedValue === "") {
+            // alert("isi semua data report")
+            return Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: 'Fill all the form.',
+                showConfirmButton: false,
+                timer: 875,
+                width: "223px"
+            })
         } else {
             const [corp, url] = this.state.selectedValue.split(",")
             // console.log("ini corp", corp)
@@ -96,19 +123,28 @@ class HomePage extends React.Component {
                 imgcorp: url,
                 orderid: this.orderId.value,
                 productcd: this.productCode.value,
-                datetransaction: this.state.startDate.toLocaleDateString(),
+                datetransaction: dateToSend,
+                // date: this.state.startDate2.toISOString().substring(0, 10),
                 date: this.state.startDate2.toLocaleDateString(),
                 detail: this.caseDesc.value,
                 status: "On Check🔎"
             }).then((res) => {
                 // console.log("post report", res)
                 // console.log(res.data.detail.length > 1)
+                console.log("data res", res)
                 if (res.data.detail !== "") {
-                    this.setState({
-                        isLoading: true
+                    // alert("data berhasil ditambahkan")
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Data has been saved.',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        width: "223px"
+                    }).then((result) => {
+                        console.log("res swal", result)
                     })
-                    alert("data berhasil ditambahkan")
-                    window.location.reload()
+                    
                 }
             }).catch((err) => {
                 console.log(err)
@@ -120,13 +156,13 @@ class HomePage extends React.Component {
 
     render() {
         return (
-        
-                this.state.isLoading ? <Image fluid src={lotteLoading}  width={50} height={50}/> 
+
+            this.state.isLoading ? <Image fluid src={lotteLoading} width={50} height={50} />
                 :
-            
+
                 <div className='p-5 mt-5' style={{}} >
 
-                        <h1 style={{textAlign: "center"}}>REPORT PAGE</h1>
+                    <h1 style={{ textAlign: "center" }}>REPORT PAGE</h1>
                     <div className='shadow p-3'>
                         <Form>
                             <FormGroup>
@@ -160,13 +196,13 @@ class HomePage extends React.Component {
                                 />
                             </FormGroup>
 
-                            <FormGroup>
+                            <FormGroup onSubmit={this.handleSubmit}>
                                 <Label>Transaction Date</Label>
                                 <InputGroup>
                                     <DatePicker
                                         className="mb-4 w-100"
-                                        selected={this.state.startDate}
-                                        onChange={this.handleChange}
+                                        selected={this.state.selectedDate}
+                                        onChange={this.handleDateChange}
                                         dateFormat="dd/MM/yyyy"
                                         popperPlacement="bottom-fixed"
                                     />
@@ -237,7 +273,7 @@ class HomePage extends React.Component {
                         </Form>
                     </div>
                 </div>
-            
+
 
         );
     }

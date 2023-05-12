@@ -2,9 +2,6 @@ import React from 'react';
 import { API_URL } from '../helper';
 import axios from 'axios';
 import { Badge, Button } from 'reactstrap'
-import { CgSandClock } from "react-icons/cg";
-import { AiOutlineCheck } from "react-icons/ai";
-import { FaCheck } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
 
@@ -19,7 +16,7 @@ class TrackingPage extends React.Component {
     }
 
     componentDidMount() {
-        this.getData()
+        // this.getData()
     }
 
     getData = () => {
@@ -63,11 +60,11 @@ class TrackingPage extends React.Component {
                             <p> REPORT DATE : {value.date}</p>
                             <p> PRODUCT CODE : {value.productcd}</p>
                             <p> DETAIL CASE : {value.detail}</p>
+                            <p> SOLVED DATE : {value.solvedate}</p>
                         </div>
                     </div>
 
                     <div className='row'>
-
                         <img src={value.imgcorp} style={{ width: "20%" }} />
                     </div>
 

@@ -14,6 +14,8 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 
 
 
+
+
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -77,9 +79,18 @@ class LoginPage extends React.Component {
 
     btnLogin = () => {
         if (!this.checkLogin(this.usernameLogin.value, this.state.passValue)) {
-            return alert("USERNAME ATAU PASSWORD SALAH")
+            // return alert("USERNAME ATAU PASSWORD SALAH")
+            return Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Wrong Username or Password',
+                showConfirmButton: false,
+                timer: 775,
+                width: "223px"
+              })
         } else {
             this.props.loginAction(this.usernameLogin.value, this.state.passValue)
+            
         }
     }
 
@@ -112,12 +123,21 @@ class LoginPage extends React.Component {
 
     render() {
         if (this.props.iduser) {
-            alert(`Login Success, Welcome ${this.props.username}`)
+            
+            // alert(`Login Success, Welcome ${this.props.username}`)
             // Swal.fire(
             //     'Login Success',
             //     `Welcome ${this.props.username}`,
             //     'success'
             //   )
+                 Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Login Success',
+                showConfirmButton: false,
+                timer: 1200,
+                width: "223px"
+              })
             if (this.props.role == "user") {
                 return <Navigate to="/home-page" />
             }

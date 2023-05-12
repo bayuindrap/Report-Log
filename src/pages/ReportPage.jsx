@@ -1,10 +1,12 @@
 import React from 'react';
 import { API_URL } from '../helper';
 import axios from 'axios';
-import { Badge, Button } from 'reactstrap'
+import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText } from 'reactstrap'
+import { Form, InputGroup, FormGroup, Modal } from 'react-bootstrap';
+
 import { CgSandClock } from "react-icons/cg";
 import { AiOutlineCheck } from "react-icons/ai";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaSearch } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
 
@@ -15,14 +17,17 @@ class ReportPage extends React.Component {
         super(props);
         this.state = {
             status: ["On Check🔎", "On Progress⏳", "Solved✔"],
-            
+            dateNow: new Date(),
+            modal: false
         }
     }
 
 
     btnProcess = (id) => {
         axios.patch(`${API_URL}/report/${id}`, {
-            status: "On Progress⏳"
+            status: "On Progress⏳",
+            cause: this.rootCause.value,
+            solution: this.solution.value
         })
             .then((res) => {
                 this.props.reportAction()
@@ -33,7 +38,8 @@ class ReportPage extends React.Component {
 
     btnSolved = (id) => {
         axios.patch(`${API_URL}/report/${id}`, {
-            status: "Solved✔"
+            status: "Solved✔",
+            solvedate: this.state.dateNow.toLocaleDateString(),
         })
             .then((res) => {
                 this.props.reportAction()
@@ -42,43 +48,55 @@ class ReportPage extends React.Component {
             })
     }
 
-    // componentDidMount() {
-    //     this.getData()
-    //     this.setState({ data: this.props.data })
-    //     console.log("state data", this.state.data)
-    // }
+    toggle = () => {
+        this.setState({
+            modal: !this.state.modal
+        })
 
-    getData = () => {
     }
 
 
-    // btnShow = () => {
-    //     this.state.buttonProgress
-    //     this.state.buttonSolved
-    // }
+    modalInput = () => {
+        return (
+            <Modal show={this.state.modal} toggle={this.toggle}>
+                <Modal.Header toggle={this.toggle}>Input Cause & Solution</Modal.Header>
+                <Modal.Body>
+                    <FormGroup>
+                        <Form.Label>Root Cause</Form.Label>
+                        <InputGroup>
+                            <Input type="text" placeholder="Input Root Cause"
+                                 innerRef={(element) => this.rootCause = element} />
+                            <InputGroupText></InputGroupText>
+                        </InputGroup>
+                    </FormGroup>
 
-    // statusCheck = () => {
-    //     if (this.props.report.status === "On Progress⏳") {
-    //         this.setState({isButtonDisabled: true })
-    //     } else if (this.props.report.status === "Solved✔") {
-    //         this.setState({isButtonDisabled: true })
-    //     }   
-    //     this.state.isButtonDisabled
-    // }
-
-    // handleButtonClick = () => {
-    //     // update state based on some condition
-    //     this.setState({
-    //         isButtonDisabled: true
-    //     });
-    // }
+                    <FormGroup>
+                        <Form.Label>Solution</Form.Label>
+                        <InputGroup>
+                            <Input type="text" placeholder="Input Solution"
+                                 innerRef={(element) => this.solution = element}/>
+                            <InputGroupText></InputGroupText>
+                        </InputGroup>
+                    </FormGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                    {/* <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '} */}
+                    <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess}><CgSandClock />Process</Button>
+                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+        
+    }
 
 
     printReport = () => {
         return this.props.report.map((value, index) => {
             let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
             
-            return <div className='shadow pb-3 rounded mb-5'>
+            return (
+
+            <div className='shadow pb-3 rounded mb-5'>
                 <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
                     <b>{value.name}'s Report</b>
                     <b> | {value.orderid}</b>
@@ -97,36 +115,32 @@ class ReportPage extends React.Component {
                     </div>
 
                     <div className='row'>
-
                         <img src={value.imgcorp} style={{ width: "20%" }} />
                     </div>
 
                 </div>
 
                 <div style={{ float: "right", marginTop: -30, marginRight: 5 }}>
-                    {/* <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)} > <CgSandClock /> Process</Button> */}
-                    <Button color="warning" disabled={this.state.isButtonDisabled} style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)}
-                        {...(() => {
-                            if (value.status === "On Progress⏳") {
-                                return '';
-                            } else {
-                                return 'disabled';
-                            }
-                        })()}> <CgSandClock /> Process</Button>
-                    {/* <Button color="success" style={{ width: 110, color: "black" }} onClick={() => this.btnSolved(value.id)} > <FaCheck /> Solved</Button> */}
 
-                    <Button color="success" disabled={this.state.isButtonDisabled} style={{ width: 110, color: "black" }} onClick={() => this.btnSolved(value.id)} 
-                        {...(() => {
-                            if (value.status === "Solved✔") {
-                                console.log("value", value.status)
-                                return 'disabled';
-                            } else {
-                                return '';
-                            }
-                        })()}> <FaCheck /> Solved</Button>
-                    {/* {btnShow} */}
+
+                    {["On Check🔎"].includes(value.status) && (
+                        <div>
+                            <Button color="warning" style={{ width: 110, color: "black" }} onClick={this.toggle}><CgSandClock />Process</Button>
+                            <Button color="success" style={{ width: 110, color: "black" }} onClick={() => this.btnSolved(value.id)}><FaCheck />Solved</Button>
+                        </div>
+                    )}
+                    {["On Progress⏳"].includes(value.status) && (
+                        <Button color="success" style={{ width: 110, color: "black" }} onClick={() => this.btnSolved(value.id)}><FaCheck />Solved</Button>
+                    )}
+                    {["Solved✔"].includes(value.status) && (
+                        <div></div>
+                    )}
+
+                {this.modalInput()}
                 </div>
             </div>
+
+            )
         })
     }
 
@@ -139,6 +153,7 @@ class ReportPage extends React.Component {
                 <div>
                     {this.printReport()}
                 </div>
+                
             </div>
 
         );

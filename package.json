@@ -20,7 +20,7 @@
     "reactstrap": "^9.1.9",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.1",
-    "sweetalert2": "^11.7.3",
+    "sweetalert2": "^11.7.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

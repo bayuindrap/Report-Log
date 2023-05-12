@@ -16,10 +16,6 @@ class StatusPage extends React.Component {
          }
     }
 
-    // const getDataById = (data, id) => {
-    //     return data.find(item => item.id === id);
-    //   }
-
 
     componentDidMount() {
         this.getData()

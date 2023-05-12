@@ -10,7 +10,6 @@ import { GrStatusInfo } from "react-icons/gr";
 
 
 
-
 class NavbarComp extends React.Component {
     constructor(props) {
         super(props);
