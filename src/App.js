@@ -12,6 +12,7 @@ import FooterComp from './components/FooterComp'
 import ReportPage from './pages/ReportPage'
 import StatusPage from './pages/StatusPage'
 import TrackingPage from './pages/TrackingPage'
+import TableHistory from './pages/TableHistory'
 
 
 class App extends React.Component {
@@ -58,6 +59,7 @@ class App extends React.Component {
             <Route path='/status-page' element={<StatusPage/>} />
             <Route path='/track-page' element={<TrackingPage/>} />
             <Route path='/report-page' element={<ReportPage />} />
+            <Route path='/table-page' element={<TableHistory />} />
           </Routes>
           <FooterComp/>
         

@@ -7,6 +7,7 @@ import { MdOutlineReportProblem } from "react-icons/md";
 import { FiUsers, FiLogOut } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { GrStatusInfo } from "react-icons/gr";
+import { BsTable } from "react-icons/bs";
 
 
 
@@ -82,6 +83,11 @@ class NavbarComp extends React.Component {
                                                 <Link to="/track-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
                                                     <DropdownItem style={{color: "#black"}}>
                                                       <HiOutlineDocumentReport/> Report Log History
+                                                    </DropdownItem>
+                                                </Link>
+                                                <Link to="/table-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                    <DropdownItem style={{color: "#black"}}>
+                                                      <BsTable/> Table Log History
                                                     </DropdownItem>
                                                 </Link>
                                                 <Link to="/regis-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
