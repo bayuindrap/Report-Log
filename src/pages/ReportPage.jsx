@@ -18,7 +18,8 @@ class ReportPage extends React.Component {
         this.state = {
             status: ["On Check🔎", "On Progress⏳", "Solved✔"],
             dateNow: new Date(),
-            modal: false
+            modal: false,
+            reportId: null
         }
     }
 
@@ -31,6 +32,7 @@ class ReportPage extends React.Component {
         })
             .then((res) => {
                 this.props.reportAction()
+                this.setState({modal: false})
             }).catch((err) => {
                 console.log(err)
             })
@@ -48,15 +50,17 @@ class ReportPage extends React.Component {
             })
     }
 
-    toggle = () => {
+    toggle = (id) => {
         this.setState({
-            modal: !this.state.modal
+            modal: !this.state.modal,
+            reportId: id
         })
 
     }
 
 
     modalInput = (value) => {
+        console.log("tes val", value)
         return (
             <Modal show={this.state.modal} toggle={this.toggle}>
                 <Modal.Header toggle={this.toggle}>Input Cause & Solution</Modal.Header>
@@ -81,7 +85,7 @@ class ReportPage extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     {/* <Button color="primary" onClick={this.toggle}>Do Something</Button>{' '} */}
-                    <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)}><CgSandClock />Process</Button>
+                    <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(this.state.reportId)}><CgSandClock />Process</Button>
                     <Button color="secondary" onClick={this.toggle}>Cancel</Button>
                 </Modal.Footer>
             </Modal>
@@ -125,8 +129,8 @@ class ReportPage extends React.Component {
 
                         {["On Check🔎"].includes(value.status) && (
                             <div>
-                                <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)}><CgSandClock />Process</Button>
-                                {/* <Button color="warning" style={{ width: 110, color: "black" }} onClick={this.toggle}><CgSandClock />Process</Button> */}
+                                {/* <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)}><CgSandClock />Process</Button> */}
+                                <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.toggle(value.id)}><CgSandClock />Process</Button>
                                 <Button color="success" style={{ width: 110, color: "black" }} onClick={() => this.btnSolved(value.id)}><FaCheck />Solved</Button>
                             </div>
                         )}
@@ -137,7 +141,7 @@ class ReportPage extends React.Component {
                             <div></div>
                         )}
 
-                        {/* {this.modalInput(value.id)} */}
+                        {this.modalInput()}
                     </div>
                 </div>
 

@@ -60,6 +60,8 @@ class TrackingPage extends React.Component {
                             <p> REPORT DATE : {value.date}</p>
                             <p> PRODUCT CODE : {value.productcd}</p>
                             <p> DETAIL CASE : {value.detail}</p>
+                            <p> ROOT CAUSE : {value.cause}</p>
+                            <p> SOLUTION : {value.solution}</p>
                             <p> SOLVED DATE : {value.solvedate}</p>
                         </div>
                     </div>

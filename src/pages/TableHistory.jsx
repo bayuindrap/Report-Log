@@ -1,14 +1,11 @@
 import axios from 'axios';
 import React from 'react';
-import { Badge, Button } from 'reactstrap'
-import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, } from 'react-bootstrap';
+import { Badge, Button, Input, InputGroupText } from 'reactstrap'
+import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, FormGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify'
 import { reportAction } from '../redux/actions';
 import { API_URL } from '../helper';
-
-
-
 
 
 class TableHistory extends React.Component {
@@ -16,14 +13,46 @@ class TableHistory extends React.Component {
         super(props);
         this.state = {
             report: [],
-            status: ["All Report","On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
             isLoading: false,
-            statusIdx: 0
+            statusIdx: 0,
+            selectedValue: ''
+
         }
+        this.handleSelectChange = this.handleSelectChange.bind(this)
     }
 
     componentDidMount() {
         // this.getData()
+    }
+
+    handleSelectChange = (event) => {
+        // this.setState({ selectedValue: event.target.value });
+        const selectedValue = event.target.value;
+        let statusActive = 0;
+        switch (this.state.selectedValue) {
+            case "":
+                statusActive = 0;
+                break;
+            case "All Report":
+                statusActive = 1;
+                break;
+            case "On Check🔎":
+                statusActive = 2;
+                break;
+            case "On Progress⏳":
+                statusActive = 3;
+                break;
+            case "Solved✔":
+                statusActive = 4;
+                break;
+            default:
+                statusActive = 0;
+        }
+
+        // this.getReportFilter()
+        this.getReportFilter(this.state.selectedValue, statusActive);
+        this.setState({ selectedValue });
     }
 
     getData = () => {
@@ -48,10 +77,26 @@ class TableHistory extends React.Component {
             })
     }
 
+    // getReportFilter = (status, statusActive) => {
+    //     let apiUrl = `${API_URL}/report`;
+    //     if (statusActive > 0) {
+    //         apiUrl += `?status=${status}`;
+    //     }
+
+    //     axios.get(apiUrl)
+    //         .then((res) => {
+    //             console.log("report filt", res.data, statusActive);
+    //             this.setState({ report: res.data, statusIdx: statusActive });
+    //             // this.printReport()
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // };
+
 
     printTable = () => {
         return (
-
 
             <div>
 
@@ -135,6 +180,21 @@ class TableHistory extends React.Component {
             <div className=' p-5'>
                 <h1 style={{ textAlign: "center", marginTop: 15 }}>Table Log History</h1>
 
+                {/* <div className='mt-2'>
+                    <FormGroup>
+                        <Form.Label>Status</Form.Label>
+                        <InputGroup>
+                            <Input type="select" placeholder="Select Status" value={this.state.selectedValue} onChange={this.handleSelectChange}>
+                                <option value="">Select Status</option>
+                                <option value="All Report">All Report</option>
+                                <option value="On Check🔎">On Check</option>
+                                <option value="On Progress⏳">On Progress</option>
+                                <option value="Solved✔">Solved</option>
+                            </Input>
+                        </InputGroup>
+                    </FormGroup>
+                </div> */}
+
                 <div>
                     <div className="d-flex justify-content-evenly mb-3">
                         {
@@ -149,7 +209,7 @@ class TableHistory extends React.Component {
                             })
                         }
                     </div>
-                     {this.printTable()}
+                    {this.printTable()}
                 </div>
 
             </div>
