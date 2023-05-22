@@ -5,6 +5,9 @@ import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, FormGroup }
 import { connect } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify'
 import { reportAction } from '../redux/actions';
+import { FiDownload } from "react-icons/fi";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { API_URL } from '../helper';
 
 
@@ -13,18 +16,19 @@ class TableHistory extends React.Component {
         super(props);
         this.state = {
             report: [],
+            // report: {
+            //     jsonData: []
+            // },
             status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
             isLoading: false,
             statusIdx: 0,
-            selectedValue: ''
+            selectedValue: '',
+            process: false
 
         }
         this.handleSelectChange = this.handleSelectChange.bind(this)
     }
 
-    componentDidMount() {
-        // this.getData()
-    }
 
     handleSelectChange = (event) => {
         // this.setState({ selectedValue: event.target.value });
@@ -55,14 +59,7 @@ class TableHistory extends React.Component {
         this.setState({ selectedValue });
     }
 
-    getData = () => {
-        axios.get(`${API_URL}/report`)
-            .then((result) => {
-                this.setState({ report: result.data })
-            }).catch((error) => {
-                console.log(error)
-            })
-    }
+
 
     getReportFilter = (status, statusActive) => {
 
@@ -99,6 +96,7 @@ class TableHistory extends React.Component {
         return (
 
             <div>
+
 
                 <div>
                     <ToastContainer />
@@ -173,9 +171,42 @@ class TableHistory extends React.Component {
 
     }
 
+    convertJsonToExcel = () => {
+        const { report } = this.state;
+
+        // Create a new workbook
+        const workbook = XLSX.utils.book_new();
+
+        // Convert the JSON array to a worksheet
+        const worksheet = XLSX.utils.json_to_sheet(report);
+
+        // Add the worksheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+        // Generate an Excel file buffer
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        // Convert the buffer to a Blob
+        const excelBlob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+        // Save the Blob as a file
+        saveAs(excelBlob, 'data.xlsx');
+    };
+
+    handleDownload = () => {
+        // Assuming your JSON data is stored in the component's state
+        const { jsonData } = this.state;
+        console.log("json", jsonData)
+        this.convertJsonToExcel(jsonData);
+    }
+
+
 
 
     render() {
+        const { report, process } = this.state
+        const isReportEmpty = report.length === 0
+
         return (
             <div className=' p-5'>
                 <h1 style={{ textAlign: "center", marginTop: 15 }}>Table Log History</h1>
@@ -209,6 +240,11 @@ class TableHistory extends React.Component {
                             })
                         }
                     </div>
+                    {/* {
+                        !this.state.process ? <Button onClick={this.handleDownload}>Download</Button> : <div></div>
+                    } */}
+                    {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload/></Button>}
+
                     {this.printTable()}
                 </div>
 

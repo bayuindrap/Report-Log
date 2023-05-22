@@ -3,7 +3,7 @@ import { API_URL } from '../helper';
 import axios from 'axios';
 import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText } from 'reactstrap'
 import { Form, InputGroup, FormGroup, Modal } from 'react-bootstrap';
-
+import Swal from 'sweetalert2'
 import { CgSandClock } from "react-icons/cg";
 import { AiOutlineCheck } from "react-icons/ai";
 import { FaCheck, FaSearch } from "react-icons/fa";
@@ -32,6 +32,14 @@ class ReportPage extends React.Component {
         })
             .then((res) => {
                 this.props.reportAction()
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Data has been saved.',
+                    showConfirmButton: false,
+                    timer: 1350,
+                    width: "223px"
+                })
                 this.setState({modal: false})
             }).catch((err) => {
                 console.log(err)
