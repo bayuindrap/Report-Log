@@ -11,11 +11,6 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 
 
-
-
-
-
-
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -85,7 +80,7 @@ class LoginPage extends React.Component {
                 icon: 'error',
                 title: 'Wrong Username or Password',
                 showConfirmButton: false,
-                timer: 775,
+                timer: 800,
                 width: "223px"
               })
         } else {

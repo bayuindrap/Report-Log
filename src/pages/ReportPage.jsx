@@ -40,7 +40,7 @@ class ReportPage extends React.Component {
                     timer: 1350,
                     width: "223px"
                 })
-                this.setState({modal: false})
+                this.setState({ modal: false })
             }).catch((err) => {
                 console.log(err)
             })
@@ -59,18 +59,27 @@ class ReportPage extends React.Component {
     }
 
     toggle = (id) => {
-        this.setState({
-            modal: !this.state.modal,
+        // this.setState({
+        //     modal: !this.state.modal,
+        //     reportId: id
+        // })
+        this.setState(prevState => ({
+            modal: !prevState.modal,
             reportId: id
-        })
+        }));
+
+        const body = document.getElementsByTagName("body")[0]
+        body.classList.toggle("modal-open")
 
     }
 
 
-    modalInput = (value) => {
-        console.log("tes val", value)
+    modalInput = () => {
         return (
-            <Modal show={this.state.modal} toggle={this.toggle}>
+            <Modal show={this.state.modal} toggle={this.toggle}
+                backdrop="false"
+                keyboard={false}
+                >
                 <Modal.Header toggle={this.toggle}>Input Cause & Solution</Modal.Header>
                 <Modal.Body>
                     <FormGroup>

@@ -194,7 +194,6 @@ class TableHistory extends React.Component {
     };
 
     handleDownload = () => {
-        // Assuming your JSON data is stored in the component's state
         const { jsonData } = this.state;
         console.log("json", jsonData)
         this.convertJsonToExcel(jsonData);
