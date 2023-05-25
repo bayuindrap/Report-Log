@@ -46,16 +46,55 @@ class ReportPage extends React.Component {
             })
     }
 
+    // btnSolved = (id) => {
+    //     if(this.props.report.status === "On Check🔎") {
+    //         console.log("cek status", this.props.report.status)
+    //         return Swal.fire({
+    //             position: 'center',
+    //             icon: 'warning',
+    //             title: 'Process The Report First.',
+    //             showConfirmButton: false,
+    //             timer: 875,
+    //             width: "223px"
+    //         })
+    //         return
+    //     }
+    //     axios.patch(`${API_URL}/report/${id}`, {
+    //         status: "Solved✔",
+    //         solvedate: this.state.dateNow.toLocaleDateString(),
+    //     })
+    //         .then((res) => {
+    //             this.props.reportAction()
+    //         }).catch((error) => {
+    //             console.log(error)
+    //         })
+    // }
+
     btnSolved = (id) => {
+        const report = this.props.report.find((value) => value.id === id);
+
+        if (report.status === "On Check🔎") {
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: 'Process The Report First.',
+                showConfirmButton: false,
+                timer: 875,
+                width: "223px"
+            });
+            return
+        }
+        
         axios.patch(`${API_URL}/report/${id}`, {
             status: "Solved✔",
             solvedate: this.state.dateNow.toLocaleDateString(),
         })
             .then((res) => {
-                this.props.reportAction()
-            }).catch((error) => {
-                console.log(error)
+                this.props.reportAction();
             })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     toggle = (id) => {

@@ -17,6 +17,12 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                     ...state,
                     userList: action.payload
                 }
+                // case "KEEP_LOGIN_SUCCESS" :
+                //     // console.log("reducer report", action.payload)
+                //     return {
+                //         ...state,
+                //         userList: action.payload
+                //     }
 
             case "GET_REPORT" :
                 // console.log("reducer report", action.payload)
@@ -24,6 +30,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                     ...state,
                     reportList: action.payload
                 }
+
 
             case "LOGOUT":
                 return INITIAL_STATE

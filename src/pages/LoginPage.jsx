@@ -118,13 +118,6 @@ class LoginPage extends React.Component {
 
     render() {
         if (this.props.iduser) {
-            
-            // alert(`Login Success, Welcome ${this.props.username}`)
-            // Swal.fire(
-            //     'Login Success',
-            //     `Welcome ${this.props.username}`,
-            //     'success'
-            //   )
                  Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -166,11 +159,7 @@ class LoginPage extends React.Component {
                                 <FormGroup>
                                     <Form.Label>Password</Form.Label>
                                     <InputGroup>
-                                        {/* <Form.Control type="text" placeholder="Input Password"
-                                                innerRef={(element) => this.passLogin = element} /> */}
-                                        {/* <Input placeholder="Input Password"
-                                            innerRef={(element) => this.passLogin = element} type={this.state.passType} /> */}
-
+                                        
                                             <Input
                                             placeholder="Input Password"
                                             type={this.state.passType}

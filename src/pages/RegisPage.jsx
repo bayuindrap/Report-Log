@@ -71,7 +71,6 @@ class RegisPage extends React.Component {
                 password: this.passRegis.value,
                 role: this.state.selectedRole,
                 dept: this.state.selectedValue,
-                report: []
             }).then((res) => {
                 console.log(res.data)
                 Swal.fire({

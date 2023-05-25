@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisPage from './pages/RegisPage'
-import { loginAction, reportAction, userAction, historyAction } from './redux/actions/userAction'
+import { loginAction, reportAction, userAction, historyAction, keepLogin } from './redux/actions/userAction'
 import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
@@ -13,8 +13,10 @@ import ReportPage from './pages/ReportPage'
 import StatusPage from './pages/StatusPage'
 import TrackingPage from './pages/TrackingPage'
 import TableHistory from './pages/TableHistory'
+import CryptoJS from 'crypto-js';
 
 
+const encryptionKey = 'myEncryptionKey'
 class App extends React.Component {
   constructor (props) {
     super(props)
@@ -22,31 +24,34 @@ class App extends React.Component {
       loading: false
     }
   }
+  
 
   componentDidMount () {
     // this.props.userAction()
-    this.keeplogin()
+    // this.keeplogin()
     this.props.reportAction()
     this.props.historyAction()
+    this.props.keepLogin()
   }
 
-  keeplogin = async () => {
-    try {
-      let local = JSON.parse(localStorage.getItem("data"))
-      if (local) {
-        let res = await this.props.loginAction(local.username, local.password)
 
-        if (res.success) {
-          this.setState({ loading : false })
-        }
-      } else {
-        this.setState({ loading : false })
-      }
-    }
-    catch (error) {
-      console.log(error)
-    }
-  }
+  // keeplogin = async () => {
+  //   try {
+  //     let local = JSON.parse(localStorage.getItem("data"))
+  //     if (local) {
+  //       let res = await this.props.loginAction(local.username, local.password)
+
+  //       if (res.success) {
+  //         this.setState({ loading : false })
+  //       }
+  //     } else {
+  //       this.setState({ loading : false })
+  //     }
+  //   }
+  //   catch (error) {
+  //     console.log(error)
+  //   }
+  // }
 
   render () {
     return (
@@ -82,4 +87,4 @@ const mapToProps = (state) => {
   }
 }
 
-export default connect(mapToProps, { loginAction, reportAction, historyAction})(App);
+export default connect(mapToProps, { loginAction, reportAction, historyAction, keepLogin})(App);

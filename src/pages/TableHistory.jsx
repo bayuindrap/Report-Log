@@ -3,6 +3,8 @@ import React from 'react';
 import { Badge, Button, Input, InputGroupText } from 'reactstrap'
 import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, FormGroup } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import { ToastContainer, toast } from 'react-toastify'
 import { reportAction } from '../redux/actions';
 import { FiDownload } from "react-icons/fi";
@@ -16,48 +18,25 @@ class TableHistory extends React.Component {
         super(props);
         this.state = {
             report: [],
-            // report: {
-            //     jsonData: []
-            // },
             status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
             isLoading: false,
             statusIdx: 0,
             selectedValue: '',
-            process: false
+            process: false,
+            startDate: null,
+            endDate: null,
 
         }
-        this.handleSelectChange = this.handleSelectChange.bind(this)
+
     }
 
-
-    handleSelectChange = (event) => {
-        // this.setState({ selectedValue: event.target.value });
-        const selectedValue = event.target.value;
-        let statusActive = 0;
-        switch (this.state.selectedValue) {
-            case "":
-                statusActive = 0;
-                break;
-            case "All Report":
-                statusActive = 1;
-                break;
-            case "On Check🔎":
-                statusActive = 2;
-                break;
-            case "On Progress⏳":
-                statusActive = 3;
-                break;
-            case "Solved✔":
-                statusActive = 4;
-                break;
-            default:
-                statusActive = 0;
-        }
-
-        // this.getReportFilter()
-        this.getReportFilter(this.state.selectedValue, statusActive);
-        this.setState({ selectedValue });
-    }
+    handleStartDateChange = (date) => {
+        this.setState({ startDate: date });
+      };
+    
+      handleEndDateChange = (date) => {
+        this.setState({ endDate: date });
+      };
 
 
 
@@ -74,29 +53,10 @@ class TableHistory extends React.Component {
             })
     }
 
-    // getReportFilter = (status, statusActive) => {
-    //     let apiUrl = `${API_URL}/report`;
-    //     if (statusActive > 0) {
-    //         apiUrl += `?status=${status}`;
-    //     }
-
-    //     axios.get(apiUrl)
-    //         .then((res) => {
-    //             console.log("report filt", res.data, statusActive);
-    //             this.setState({ report: res.data, statusIdx: statusActive });
-    //             // this.printReport()
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // };
-
-
     printTable = () => {
         return (
 
             <div>
-
 
                 <div>
                     <ToastContainer />
@@ -149,7 +109,6 @@ class TableHistory extends React.Component {
                                                     <td>{value.status}</td>
                                                     <td>{value.name}</td>
                                                     <td>{value.orderid}</td>
-                                                    {/* <td>{value.imgcorp}</td> */}
                                                     <td><img src={value.imgcorp} style={{ width: 150 }} /></td>
                                                     <td>{value.datetransaction}</td>
                                                     <td>{value.date}</td>
@@ -210,20 +169,6 @@ class TableHistory extends React.Component {
             <div className=' p-5'>
                 <h1 style={{ textAlign: "center", marginTop: 15 }}>Table Log History</h1>
 
-                {/* <div className='mt-2'>
-                    <FormGroup>
-                        <Form.Label>Status</Form.Label>
-                        <InputGroup>
-                            <Input type="select" placeholder="Select Status" value={this.state.selectedValue} onChange={this.handleSelectChange}>
-                                <option value="">Select Status</option>
-                                <option value="All Report">All Report</option>
-                                <option value="On Check🔎">On Check</option>
-                                <option value="On Progress⏳">On Progress</option>
-                                <option value="Solved✔">Solved</option>
-                            </Input>
-                        </InputGroup>
-                    </FormGroup>
-                </div> */}
 
                 <div>
                     <div className="d-flex justify-content-evenly mb-3">
@@ -242,7 +187,7 @@ class TableHistory extends React.Component {
                     {/* {
                         !this.state.process ? <Button onClick={this.handleDownload}>Download</Button> : <div></div>
                     } */}
-                    {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload/></Button>}
+                    {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload /></Button>}
 
                     {this.printTable()}
                 </div>

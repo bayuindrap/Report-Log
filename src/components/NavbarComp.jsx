@@ -10,40 +10,39 @@ import { GrStatusInfo } from "react-icons/gr";
 import { BsTable } from "react-icons/bs";
 
 
-
 class NavbarComp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {  }
     }
+
+    refreshPage = () => {
+        window.location.reload()
+    }
+
     render() { 
+        const isAdmin = this.props.role === "admin"
+        const isLogin = this.props.iduser === ""
+        const homePageLink = isLogin ? "/" : (isAdmin ? "/report-page" : "/home-page")
+   
+
+
         return ( 
             <div>
                 <Navbar expand="md" fixed="top" color="light">
                 <NavbarBrand>
-                    <Link to="/home-page">
+                    <Link to={homePageLink}>
                         <img src="https://i.postimg.cc/X7sXFBSM/icon-lotte-logoshape.png" alt="logo-brand" width="40px" />
                     </Link>
                 </NavbarBrand>
                 <NavbarToggler onClick={() => this.setState({ openCollapse: !this.state.openCollapse })} />
                 <Collapse isOpen={this.state.openCollapse} navbar>
                     <Nav>
-                        {
-                        this.props.role == "admin"
-                        ? 
                         <NavItem> 
-                            <Link className="nav-link" to="/report-page" style={{ color: "#ED1C24" }}>
+                            <Link className="nav-link" to={homePageLink} style={{ color: "#ED1C24" }}>
                                 Home Page
                             </Link>
                         </NavItem>
-                        :
-                        <NavItem> 
-                            <Link className="nav-link" to="/home-page" style={{ color: "#ED1C24" }}>
-                                Home Page
-                            </Link>
-                        </NavItem>
-
-                        }
                     </Nav>
                     {
                         // this.props.loading ?
@@ -129,7 +128,6 @@ class NavbarComp extends React.Component {
                                         </Link>
                                     </NavItem>
                                 </Nav>
-
                     }
 
                 </Collapse>

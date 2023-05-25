@@ -137,15 +137,19 @@ class HomePage extends React.Component {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Data has been saved.',
+                        title: 'Report has been saved.',
                         showConfirmButton: false,
                         timer: 1500,
                         width: "223px"
                     }).then((result) => {
                         console.log("res swal", result)
+                        if(result.isConfirmed === false) {
+                            window.location.reload()
+                        }
                     })
                     
                 }
+                // window.location.reload()
             }).catch((err) => {
                 console.log(err)
             })
