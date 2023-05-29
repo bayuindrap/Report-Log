@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisPage from './pages/RegisPage'
-import { loginAction, reportAction, userAction, historyAction, keepLogin } from './redux/actions/userAction'
+import { loginAction, reportAction, userAction, historyAction, keepLogin, logoutAction } from './redux/actions/userAction'
 import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
@@ -13,6 +13,7 @@ import ReportPage from './pages/ReportPage'
 import StatusPage from './pages/StatusPage'
 import TrackingPage from './pages/TrackingPage'
 import TableHistory from './pages/TableHistory'
+
 import CryptoJS from 'crypto-js';
 
 
@@ -32,26 +33,34 @@ class App extends React.Component {
     this.props.reportAction()
     this.props.historyAction()
     this.props.keepLogin()
+    this.checkSession()
   }
 
+   checkSession = () => {
+    const SESSION_EXPIRATION_TIME = 1 * 60 * 1000; // Set the session expiration time (30 minutes)
+  
+    const sessionTimestamp = localStorage.getItem('sessionTimestamp');
+    if (sessionTimestamp) {
+      const currentTimestamp = Date.now();
+      if (currentTimestamp - sessionTimestamp > SESSION_EXPIRATION_TIME) {
+        // Session has expired, perform logout action or method
+        // Example with Redux:
+        // dispatch(logout());
+        localStorage.removeItem("data")
+        // Example without Redux:
+        // logout();
+        localStorage.clear(); // Optionally, clear user data from local storage
+      } else {
+        // Session is still valid, update session timestamp
+        localStorage.setItem('sessionTimestamp', currentTimestamp);
+      }
+    } else {
+      // No session found, initialize a new session
+      localStorage.setItem('sessionTimestamp', Date.now());
+    }
+  };
 
-  // keeplogin = async () => {
-  //   try {
-  //     let local = JSON.parse(localStorage.getItem("data"))
-  //     if (local) {
-  //       let res = await this.props.loginAction(local.username, local.password)
-
-  //       if (res.success) {
-  //         this.setState({ loading : false })
-  //       }
-  //     } else {
-  //       this.setState({ loading : false })
-  //     }
-  //   }
-  //   catch (error) {
-  //     console.log(error)
-  //   }
-  // }
+  
 
   render () {
     return (
@@ -87,4 +96,4 @@ const mapToProps = (state) => {
   }
 }
 
-export default connect(mapToProps, { loginAction, reportAction, historyAction, keepLogin})(App);
+export default connect(mapToProps, { loginAction, reportAction, historyAction, keepLogin, logoutAction})(App);

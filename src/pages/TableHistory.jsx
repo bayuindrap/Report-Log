@@ -27,31 +27,78 @@ class TableHistory extends React.Component {
             endDate: null,
 
         }
+        this.handleStartDateChange = this.handleStartDateChange.bind(this);
+        this.handleEndDateChange = this.handleEndDateChange.bind(this);
+        // this.handleChange = this.handleChange.bind(this);
+        // this.handleChangeReport = this.handleChangeReport.bind(this);
+        // this.handleStartDateChange = this.handleStartDateChange.bind(this);
+        // this.handleEndDateChange = this.handleEndDateChange.bind(this);
+    };
 
-    }
+    // handleStartDateChange = (date) => {
+    //     this.setState({ startDate: date });
+    // };
+
+    // handleEndDateChange = (date) => {
+    //     this.setState({ endDate: date });
+    // };
 
     handleStartDateChange = (date) => {
-        this.setState({ startDate: date });
-      };
+        this.setState({ startDate: date }, () => {
+            this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+        });
+    };
+
+    handleEndDateChange = (date) => {
+        this.setState({ endDate: date }, () => {
+            this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+        });
+    };
+
+
+
+    // getReportFilter = (status, statusActive) => {
+
+    //     axios.get(`${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`)
+    //         // console.log("cek", statusActive)
+    //         .then((res) => {
+    //             console.log("report filt", res.data, statusActive)
+    //             this.setState({ report: res.data, statusIdx: statusActive })
+    //             // this.printReport()
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
     
-      handleEndDateChange = (date) => {
-        this.setState({ endDate: date });
-      };
-
-
-
-    getReportFilter = (status, statusActive) => {
-
-        axios.get(`${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`)
-            // console.log("cek", statusActive)
+    getReportFilter = (status, statusActive, startDate, endDate) => {
+        console.log("start date", startDate?.toLocaleDateString());
+        const formattedStartDate = startDate?.toLocaleDateString();
+        const formattedEndDate = endDate?.toLocaleDateString();
+        const apiUrl = `${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`;
+    
+        axios.get(apiUrl)
             .then((res) => {
-                console.log("report filt", res.data, statusActive)
-                this.setState({ report: res.data, statusIdx: statusActive })
-                // this.printReport()
-            }).catch((err) => {
-                console.log(err)
+                const filteredReport = res.data.filter((report) => {
+                    const reportDate = new Date(report.date);
+                    if (formattedStartDate && formattedEndDate) {
+                        return reportDate >= startDate && reportDate <= endDate;
+                    }
+                    if (formattedStartDate) {
+                        return reportDate >= startDate;
+                    }
+                    if (formattedEndDate) {
+                        return reportDate <= endDate;
+                    }
+                    return true;
+                });
+                console.log("report filt", filteredReport, statusActive);
+                this.setState({ report: filteredReport, statusIdx: statusActive });
             })
-    }
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
 
     printTable = () => {
         return (
@@ -187,9 +234,28 @@ class TableHistory extends React.Component {
                     {/* {
                         !this.state.process ? <Button onClick={this.handleDownload}>Download</Button> : <div></div>
                     } */}
+                    {/* <div>
+                        <label>From Date: </label>
+                        <DatePicker selected={this.state.startDate} onChange={this.handleStartDateChange} />
+                    </div> */}
+                    <div style={{ position: 'relative', zIndex: 20 }}>
+                        <label>From Date: </label>
+                        <DatePicker selected={this.state.startDate} 
+                        onChange={this.handleStartDateChange} 
+                        popperPlacement="top"
+                        placeholderText="Choose a start date" />
+                    </div>
+                    <div style={{ position: 'relative', zIndex: 20, marginTop: 10 }}>
+                        <label>To Date: </label>
+                        <DatePicker selected={this.state.endDate} 
+                        onChange={this.handleEndDateChange} 
+                        popperPlacement="bottom-start"
+                        placeholderText="Choose a end date" />
+                    </div>
                     {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload /></Button>}
-
-                    {this.printTable()}
+                    <div style={{marginTop:"20px"}}>
+                        {this.printTable()}
+                    </div>
                 </div>
 
             </div>

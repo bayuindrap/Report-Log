@@ -110,15 +110,54 @@ export const keepLogin = () => async (dispatch) => {
       if (local) {
         let res = await dispatch(loginAction(local.username, local.password));
         if (res.success) {
+          // Set session timeout (e.g., 30 minutes)
+          const sessionTimeout = 5 * 60 * 1000; // 30 minutes in milliseconds
+  
+          // Get the current timestamp
+          const currentTime = new Date().getTime();
+  
+          // Get the last activity timestamp from local storage
+          const lastActivityTime = parseInt(localStorage.getItem("lastActivityTime"));
+  
+          // Check if the session has expired
+          if (lastActivityTime && currentTime - lastActivityTime > sessionTimeout) {
+            // Session expired, remove user data from local storage and logout
+            localStorage.removeItem("data");
+            dispatch(logoutAction());
+            return; // Exit the function
+          }
+  
+          // Update the last activity timestamp in local storage
+          localStorage.setItem("lastActivityTime", currentTime.toString());
+  
           dispatch({ type: "KEEP_LOGIN_SUCCESS" });
         }
       } else {
-        dispatch({ type: "KEEP_LOGIN_FAILURE" });
+        // No local data found, remove user data from local storage and logout
+        localStorage.removeItem("data");
+        dispatch(logoutAction());
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+// export const keepLogin = () => async (dispatch) => {
+//     try {
+//       let local = getDecryptedData();
+//       if (local) {
+//         let res = await dispatch(loginAction(local.username, local.password));
+//         if (res.success) {
+//           dispatch({ type: "KEEP_LOGIN_SUCCESS" });
+//         }
+//       } else {
+//         localStorage.removeItem("data"); // Remove user data from local storage
+//         dispatch(logoutAction())
+//       }
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
 
 // export const keepLogin = async () => {
 //     try {

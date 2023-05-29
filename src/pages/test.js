@@ -23,14 +23,26 @@ class TableHistory extends React.Component {
     };
   }
 
+  // handleStartDateChange = (date) => {
+  //   this.setState({ startDate: date });
+  // };
+
+  // handleEndDateChange = (date) => {
+  //   this.setState({ endDate: date });
+  // };
+
   handleStartDateChange = (date) => {
-    this.setState({ startDate: date });
+    this.setState({ startDate: date }, () => {
+      this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+    });
   };
-
+  
   handleEndDateChange = (date) => {
-    this.setState({ endDate: date });
+    this.setState({ endDate: date }, () => {
+      this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+    });
   };
-
+  
   getReportFilter = (status, statusActive, startDate, endDate) => {
     const apiUrl = `${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`;
 
