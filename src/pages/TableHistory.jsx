@@ -91,7 +91,7 @@ class TableHistory extends React.Component {
                     }
                     return true;
                 });
-                console.log("report filt", filteredReport, statusActive);
+                console.log("data filter report", filteredReport, statusActive);
                 this.setState({ report: filteredReport, statusIdx: statusActive });
             })
             .catch((err) => {
