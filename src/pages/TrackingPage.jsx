@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Badge, Button } from 'reactstrap'
 import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
+import lotteLoading from "../assets/Logo-Lotte.gif"
+import { Image } from 'react-bootstrap'; 
 
 class TrackingPage extends React.Component {
     constructor(props) {
@@ -11,7 +13,8 @@ class TrackingPage extends React.Component {
         this.state = {
             status: ["All Report","On Check🔎", "On Progress⏳", "Solved✔"],
             report: [],
-            statusIdx: 0
+            statusIdx: 0,
+            isLoading: false
         }
     }
 
@@ -29,12 +32,12 @@ class TrackingPage extends React.Component {
     }
 
     getReportFilter = (status, statusActive) => {
-        
+        this.setState({isLoading: true})
         axios.get(`${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`)
         // console.log("cek", statusActive)
             .then((res) => {
                 console.log("report filt", res.data, statusActive)
-                this.setState({ report: res.data, statusIdx: statusActive })
+                this.setState({ report: res.data, statusIdx: statusActive,  isLoading: false })
                 // this.printReport()
             }).catch((err) => {
                 console.log(err)
@@ -96,7 +99,19 @@ class TrackingPage extends React.Component {
                             })
                         }
                     </div>
-                    {this.printReport()}
+                    <div style={{ marginTop: "20px" }}>
+                    {   this.state.isLoading ? (
+                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                            <Image src={lotteLoading} width={80} height={80} style={{display: "flex", justifyContent: "center"}} />
+                        </div>
+                        ) : (
+
+                            this.printReport()
+                           
+                        )
+                        }
+                    </div>
+                    {/* {this.printReport()} */}
                 </div>
             </div>
         );

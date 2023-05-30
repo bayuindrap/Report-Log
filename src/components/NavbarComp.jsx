@@ -21,7 +21,7 @@ class NavbarComp extends React.Component {
     }
 
     render() { 
-        const isAdmin = this.props.role === "admin"
+        const isAdmin = this.props.role === "superadmin"
         const isLogin = this.props.iduser === ""
         const homePageLink = isLogin ? "/" : (isAdmin ? "/report-page" : "/home-page")
    
@@ -82,7 +82,7 @@ class NavbarComp extends React.Component {
                                                 </DropdownItem>
                                             </DropdownMenu>
 
-                                            :
+                                            : this.props.role == "superadmin" ? (
 
                                             <DropdownMenu right >
                                                 <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
@@ -115,6 +115,35 @@ class NavbarComp extends React.Component {
                                                    <FiLogOut/> Logout
                                                 </DropdownItem>
                                             </DropdownMenu>
+                                         ) : 
+
+                                            <DropdownMenu right >
+                                         <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                             <DropdownItem style={{color: "#black"}}>
+                                                 <MdOutlineReportProblem/> Report List
+                                             </DropdownItem>
+                                         </Link>
+                                         <Link to="/track-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                             <DropdownItem style={{color: "#black"}}>
+                                               <HiOutlineDocumentReport/> Report Log History
+                                             </DropdownItem>
+                                         </Link>
+                                         <Link to="/table-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                             <DropdownItem style={{color: "#black"}}>
+                                               <BsTable/> Table Log History
+                                             </DropdownItem>
+                                         </Link>
+                                         <DropdownItem divider />
+                                         <DropdownItem onClick={() => {
+                                             localStorage.removeItem("data");
+                                             this.props.logoutAction();
+                                             <Navigate to="/"/>
+                                             window.location.href = "/"
+                                         }} style={{color: "red"}}>
+                                            <FiLogOut/> Logout
+                                         </DropdownItem>
+                                     </DropdownMenu>
+
 
                                     }
 

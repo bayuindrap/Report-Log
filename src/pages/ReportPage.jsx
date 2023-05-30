@@ -9,6 +9,7 @@ import { AiOutlineCheck } from "react-icons/ai";
 import { FaCheck, FaSearch } from "react-icons/fa";
 import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
+import lotteLoading from "../assets/Logo-Lotte.gif"
 
 
 

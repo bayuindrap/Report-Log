@@ -78,9 +78,14 @@ class RegisPage extends React.Component {
                     icon: 'success',
                     title: `Registration Complete`,
                     showConfirmButton: false,
-                    timer: 1150,
-                    width: "250px"
-                  })
+                    timer: 1250,
+                    width: "255px"
+                  }).then((result) => {
+                    console.log("res swal", result)
+                    if(result.isConfirmed === false) {
+                        window.location.reload()
+                    }
+                })
                 // alert(`${this.usernameRegis.value}, Registration Complete`)
                 // if (res.data.length > 0) {
                 //     return <Navigate to="/login-page" />
@@ -145,8 +150,8 @@ class RegisPage extends React.Component {
                                     <InputGroup>
                                         <Input type="select" placeholder="Input Department" value={this.state.selectedValue} onChange={this.handleSelectChange}>
                                             <option value="">Select Department</option>
-                                            <option value="operation">Operation</option>
                                             <option value="admin">Admin</option>
+                                            <option value="operation">Operation</option>
                                         </Input>
                                     </InputGroup>
                                 </FormGroup>
@@ -156,8 +161,9 @@ class RegisPage extends React.Component {
                                     <InputGroup>
                                         <Input type="select" placeholder="Select Role" value={this.state.selectedRole} onChange={this.handleSelectRole}>
                                             <option value="">Select Role</option>
-                                            <option value="user">User</option>
+                                            <option value="superadmin">Super Admin</option>
                                             <option value="admin">Admin</option>
+                                            <option value="user">User</option>
                                         </Input>
                                     </InputGroup>
                                 </FormGroup>

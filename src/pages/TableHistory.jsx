@@ -11,6 +11,7 @@ import { FiDownload } from "react-icons/fi";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { API_URL } from '../helper';
+import lotteLoading from "../assets/Logo-Lotte.gif"
 
 
 class TableHistory extends React.Component {
@@ -29,10 +30,7 @@ class TableHistory extends React.Component {
         }
         this.handleStartDateChange = this.handleStartDateChange.bind(this);
         this.handleEndDateChange = this.handleEndDateChange.bind(this);
-        // this.handleChange = this.handleChange.bind(this);
-        // this.handleChangeReport = this.handleChangeReport.bind(this);
-        // this.handleStartDateChange = this.handleStartDateChange.bind(this);
-        // this.handleEndDateChange = this.handleEndDateChange.bind(this);
+
     };
 
     // handleStartDateChange = (date) => {
@@ -69,13 +67,14 @@ class TableHistory extends React.Component {
     //             console.log(err)
     //         })
     // }
-    
+
     getReportFilter = (status, statusActive, startDate, endDate) => {
+        this.setState({ isLoading: true })
         console.log("start date", startDate?.toLocaleDateString());
         const formattedStartDate = startDate?.toLocaleDateString();
         const formattedEndDate = endDate?.toLocaleDateString();
         const apiUrl = `${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`;
-    
+
         axios.get(apiUrl)
             .then((res) => {
                 const filteredReport = res.data.filter((report) => {
@@ -92,7 +91,7 @@ class TableHistory extends React.Component {
                     return true;
                 });
                 console.log("data filter report", filteredReport, statusActive);
-                this.setState({ report: filteredReport, statusIdx: statusActive });
+                this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
             })
             .catch((err) => {
                 console.log(err);
@@ -213,13 +212,15 @@ class TableHistory extends React.Component {
         const isReportEmpty = report.length === 0
 
         return (
+            
             <div className=' p-5'>
                 <h1 style={{ textAlign: "center", marginTop: 15 }}>Table Log History</h1>
 
 
                 <div>
                     <div className="d-flex justify-content-evenly mb-3">
-                        {
+                        {   
+
                             this.state.status.map((value, index) => {
                                 return <Button outline
                                     color={this.state.statusIdx == index ? "danger" : "secondary"}
@@ -229,32 +230,41 @@ class TableHistory extends React.Component {
                                     <h6 style={{ fontWeight: "bold" }}>{value}</h6>
                                 </Button>
                             })
+                        
                         }
                     </div>
-                    {/* {
-                        !this.state.process ? <Button onClick={this.handleDownload}>Download</Button> : <div></div>
-                    } */}
-                    {/* <div>
-                        <label>From Date: </label>
-                        <DatePicker selected={this.state.startDate} onChange={this.handleStartDateChange} />
-                    </div> */}
-                    <div style={{ position: 'relative', zIndex: 20 }}>
-                        <label>From Date: </label>
-                        <DatePicker selected={this.state.startDate} 
-                        onChange={this.handleStartDateChange} 
-                        popperPlacement="top"
-                        placeholderText="Choose a start date" />
-                    </div>
-                    <div style={{ position: 'relative', zIndex: 20, marginTop: 10 }}>
-                        <label>To Date: </label>
-                        <DatePicker selected={this.state.endDate} 
-                        onChange={this.handleEndDateChange} 
-                        popperPlacement="bottom-start"
-                        placeholderText="Choose a end date" />
+                    <div className='row'>
+                        <div className="col" style={{ zIndex: 30 }}>
+                            <label>From Date: </label>
+                            <DatePicker selected={this.state.startDate}
+                                onChange={this.handleStartDateChange}
+                                style={{ width: '100%' }}
+                                popperPlacement="bottom-start"
+                                placeholderText="Choose a start date" />
+                        </div>
+                        <div className="col text-end" style={{ position: 'relative', zIndex: 20, marginLeft: 'auto' }}>
+                            <div className='auto'>
+                                <label>To Date: </label>
+                            </div>
+                            <DatePicker selected={this.state.endDate}
+                                onChange={this.handleEndDateChange}
+                                style={{ width: '100%' }}
+                                popperPlacement="bottom-start"
+                                placeholderText="Choose a end date" />
+                        </div>
                     </div>
                     {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload /></Button>}
-                    <div style={{marginTop:"20px"}}>
-                        {this.printTable()}
+                    <div style={{ marginTop: "20px" }}>
+                    {   this.state.isLoading ? (
+                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                            <Image src={lotteLoading} width={100} height={100} style={{display: "flex", justifyContent: "center"}} />
+                        </div>
+                        ) : (
+
+                            this.printTable()
+                           
+                        )
+                        }
                     </div>
                 </div>
 
