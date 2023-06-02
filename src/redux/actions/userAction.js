@@ -2,7 +2,7 @@ import axios from "axios"
 import { API_URL } from "../../helper"
 import CryptoJS from 'crypto-js';
 
-const encryptionKey = 'myEncryptionKey'
+const encryptionKey = 'encriptiondKey'
 
 // export const loginAction = (username, password) => {
 //     return async (dispatch) => {
@@ -21,6 +21,8 @@ const encryptionKey = 'myEncryptionKey'
 //         }
 //     }
 // }
+
+
 
 export const loginAction = (username, password) => {
     return async (dispatch) => {
@@ -111,7 +113,7 @@ export const keepLogin = () => async (dispatch) => {
         let res = await dispatch(loginAction(local.username, local.password));
         if (res.success) {
           // Set session timeout (e.g., 30 minutes)
-          const sessionTimeout = 5 * 60 * 1000; // 30 minutes in milliseconds
+          const sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
   
           // Get the current timestamp
           const currentTime = new Date().getTime();

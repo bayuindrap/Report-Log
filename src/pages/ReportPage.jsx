@@ -169,7 +169,7 @@ class ReportPage extends React.Component {
                         <div className='p-2'>
                             <div>
                                 <p> TRANSACTION DATE : {value.datetransaction}</p>
-                                <p> REPORT DATE : {value.date}</p>
+                                <p> REPORT DATE : {value.reportdate}</p>
                                 <p> PRODUCT CODE : {value.productcd}</p>
                                 <p> DETAIL CASE : {value.detail}</p>
                             </div>
@@ -212,8 +212,14 @@ class ReportPage extends React.Component {
             <div className='container p-5 mt-4'>
                 <h1 className='text-center'>Report Page Admin</h1>
 
-                <div>
-                    {this.printReport()}
+                <div> 
+                    {
+                      this.props.report.length == 0 ? (
+                        <h4 style={{textAlign: "center", marginTop: "200px", paddingBottom: "190px"}}>Data not found.</h4>
+                      ) : this.printReport()
+                        
+                    }
+                    {/* {this.printReport()} */}
                 </div>
 
             </div>
@@ -223,7 +229,7 @@ class ReportPage extends React.Component {
 }
 
 const mapToProps = ({ userReducer }) => {
-    console.log("tes report", userReducer.reportList)
+    console.log("tes report page", userReducer.reportList)
     // console.log("tes data", props.report)
     return {
         report: userReducer.reportList

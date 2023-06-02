@@ -125,7 +125,7 @@ class HomePage extends React.Component {
                 productcd: this.productCode.value,
                 datetransaction: dateToSend,
                 // date: this.state.startDate2.toISOString().substring(0, 10),
-                date: this.state.startDate2.toLocaleDateString(),
+                reportdate: this.state.startDate2.toLocaleDateString(),
                 detail: this.caseDesc.value,
                 status: "On Check🔎"
             }).then((res) => {

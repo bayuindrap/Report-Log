@@ -5,6 +5,7 @@ import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, FormGroup }
 import { connect } from 'react-redux';
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
+import { BiReset } from "react-icons/bi";
 import { ToastContainer, toast } from 'react-toastify'
 import { reportAction } from '../redux/actions';
 import { FiDownload } from "react-icons/fi";
@@ -28,18 +29,9 @@ class TableHistory extends React.Component {
             endDate: null,
 
         }
-        this.handleStartDateChange = this.handleStartDateChange.bind(this);
-        this.handleEndDateChange = this.handleEndDateChange.bind(this);
 
     };
 
-    // handleStartDateChange = (date) => {
-    //     this.setState({ startDate: date });
-    // };
-
-    // handleEndDateChange = (date) => {
-    //     this.setState({ endDate: date });
-    // };
 
     handleStartDateChange = (date) => {
         this.setState({ startDate: date }, () => {
@@ -78,15 +70,15 @@ class TableHistory extends React.Component {
         axios.get(apiUrl)
             .then((res) => {
                 const filteredReport = res.data.filter((report) => {
-                    const reportDate = new Date(report.date);
+                    const reportDate = new Date(report.reportdate);
                     if (formattedStartDate && formattedEndDate) {
-                        return reportDate >= startDate && reportDate <= endDate;
+                        return reportDate >= new Date(formattedStartDate) && reportDate <= new Date(formattedEndDate);
                     }
-                    if (formattedStartDate) {
-                        return reportDate >= startDate;
+                    else if (formattedStartDate) {
+                        return reportDate >= new Date(formattedStartDate);
                     }
-                    if (formattedEndDate) {
-                        return reportDate <= endDate;
+                    else if (formattedEndDate) {
+                        return reportDate <= new Date(formattedEndDate);
                     }
                     return true;
                 });
@@ -125,7 +117,7 @@ class TableHistory extends React.Component {
                                         } */}
                                 </Col>
                             </Row>
-                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "65vh" }}>
+                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "80vh" }}>
 
 
                                 <Table striped bordered hover>
@@ -145,7 +137,7 @@ class TableHistory extends React.Component {
                                     </thead>
 
 
-                                    <tbody>
+                                    <tbody className='text-center'>
                                         {
                                             this.state.report.map((value, index) => (
                                                 // let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
@@ -157,13 +149,14 @@ class TableHistory extends React.Component {
                                                     <td>{value.orderid}</td>
                                                     <td><img src={value.imgcorp} style={{ width: 150 }} /></td>
                                                     <td>{value.datetransaction}</td>
-                                                    <td>{value.date}</td>
+                                                    <td>{value.reportdate}</td>
                                                     <td>{value.productcd}</td>
                                                     <td>{value.detail}</td>
                                                     <td>{value.solvedate}</td>
 
                                                 </tr>
-                                            ))}
+                                            ))
+                                            }
                                     </tbody>
 
                                 </Table>
@@ -204,22 +197,33 @@ class TableHistory extends React.Component {
         this.convertJsonToExcel(jsonData);
     }
 
+    btnReset = () => {
+        this.setState({
+            report: [],
+            statusIdx: 0,
+            selectedValue: '',
+            process: false,
+            startDate: null,
+            endDate: null,
+          });
+    }
 
 
 
     render() {
         const { report, process } = this.state
         const isReportEmpty = report.length === 0
+        const showDatePickers = !isReportEmpty || process;
 
         return (
-            
-            <div className=' p-5'>
+
+            <div className=' p-5 mt-1'>
                 <h1 style={{ textAlign: "center", marginTop: 15 }}>Table Log History</h1>
 
 
                 <div>
-                    <div className="d-flex justify-content-evenly mb-3">
-                        {   
+                    <div className="d-flex justify-content-evenly mb-2">
+                        {
 
                             this.state.status.map((value, index) => {
                                 return <Button outline
@@ -230,10 +234,10 @@ class TableHistory extends React.Component {
                                     <h6 style={{ fontWeight: "bold" }}>{value}</h6>
                                 </Button>
                             })
-                        
+
                         }
                     </div>
-                    <div className='row'>
+                    {/* <div className='row'>
                         <div className="col" style={{ zIndex: 30 }}>
                             <label>From Date: </label>
                             <DatePicker selected={this.state.startDate}
@@ -252,17 +256,61 @@ class TableHistory extends React.Component {
                                 popperPlacement="bottom-start"
                                 placeholderText="Choose a end date" />
                         </div>
-                    </div>
-                    {!isReportEmpty && !process && <Button color="success" onClick={this.handleDownload}>Download <FiDownload /></Button>}
-                    <div style={{ marginTop: "20px" }}>
-                    {   this.state.isLoading ? (
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <Image src={lotteLoading} width={100} height={100} style={{display: "flex", justifyContent: "center"}} />
+                    </div> */}
+                    {showDatePickers && (
+                        <div className="row">
+                            <div className="col" style={{ zIndex: 30 }}>
+                                <label>From Date: </label>
+                                <DatePicker
+                                    selected={this.state.startDate}
+                                    onChange={this.handleStartDateChange}
+                                    style={{ width: "100%" }}
+                                    popperPlacement="bottom-start"
+                                    placeholderText="Choose a start date"
+                                />
+                            </div>
+                            <div
+                                className="col text-end"
+                                style={{ position: "relative", zIndex: 20, marginLeft: "auto", textAlign: "left" }}
+                            >
+                                <div className="auto">
+                                    <label>To Date: </label>
+                                </div>
+                                <DatePicker
+                                    selected={this.state.endDate}
+                                    onChange={this.handleEndDateChange}
+                                    style={{ width: "100%" }}
+                                    popperPlacement="bottom-end"
+                                    placeholderText="Choose an end date"
+                                />
+                            </div>
                         </div>
-                        ) : (
+                    )}
+                    {!isReportEmpty && !process && 
+                    <div className='d-flex justify-content-center'>
+                        <Button color="warning" style={{ marginTop: 15, marginRight: 5, width: 127 }} onClick={this.btnReset}>Reset<BiReset/></Button>
+                        <Button color="success" style={{ marginTop: 15, width: 127 }} onClick={this.handleDownload}>Download <FiDownload /></Button>
 
-                            this.printTable()
-                           
+                    </div>
+                    }
+                    <div style={{ marginTop: "20px" }}>
+                        {this.state.isLoading ? (
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <Image src={lotteLoading} width={100} height={100} style={{ display: "flex", justifyContent: "center" }} />
+                            </div>
+                        ) : (
+                            <div>
+                                {
+                                    this.state.report.length == 0 ? (
+                                        <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "170px" }}>Data not found.</h4>
+                                    ) : this.printTable()
+
+                                }
+
+                            </div>
+
+                            // this.printTable()
+
                         )
                         }
                     </div>

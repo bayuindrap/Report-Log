@@ -4,17 +4,24 @@ import axios from 'axios';
 import { Badge, Button } from 'reactstrap'
 import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import lotteLoading from "../assets/Logo-Lotte.gif"
-import { Image } from 'react-bootstrap'; 
+import { Image } from 'react-bootstrap';
+import { BiReset } from "react-icons/bi";
+
 
 class TrackingPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ["All Report","On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
             report: [],
             statusIdx: 0,
-            isLoading: false
+            isLoading: false,
+            process: false,
+            startDate: null,
+            endDate: null
         }
     }
 
@@ -24,25 +31,78 @@ class TrackingPage extends React.Component {
 
     getData = () => {
         axios.get(`${API_URL}/report`)
-        .then((result) => {
-            this.setState({ report: result.data})
-        }).catch((error) => {
-            console.log(error)
+            .then((result) => {
+                this.setState({ report: result.data })
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
+
+    handleStartDateChange = (date) => {
+        this.setState({ startDate: date }, () => {
+            this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+        });
+    };
+
+    handleEndDateChange = (date) => {
+        this.setState({ endDate: date }, () => {
+            this.getReportFilter(this.state.status[this.state.statusIdx], this.state.statusIdx, this.state.startDate, this.state.endDate);
+        });
+    };
+
+    getReportFilter = (status, statusActive, startDate, endDate) => {
+        this.setState({ isLoading: true })
+        console.log("start date", startDate?.toLocaleDateString());
+        const formattedStartDate = startDate?.toLocaleDateString();
+        const formattedEndDate = endDate?.toLocaleDateString();
+        const apiUrl = `${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`;
+
+        axios.get(apiUrl)
+            .then((res) => {
+                const filteredReport = res.data.filter((report) => {
+                    const reportDate = new Date(report.reportdate);
+                    if (formattedStartDate && formattedEndDate) {
+                        return reportDate >= new Date(formattedStartDate) && reportDate <= new Date(formattedEndDate);
+                    }
+                    else if (formattedStartDate) {
+                        return reportDate >= new Date(formattedStartDate);
+                    }
+                    else if (formattedEndDate) {
+                        return reportDate <= new Date(formattedEndDate);
+                    }
+                    return true;
+                });
+                console.log("data filter report", filteredReport, statusActive);
+                this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    btnReset = () => {
+        this.setState({
+            report: [],
+            statusIdx: 0,
+            isLoading: false,
+            process: false,
+            startDate: null,
+            endDate: null
         })
     }
 
-    getReportFilter = (status, statusActive) => {
-        this.setState({isLoading: true})
-        axios.get(`${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`)
-        // console.log("cek", statusActive)
-            .then((res) => {
-                console.log("report filt", res.data, statusActive)
-                this.setState({ report: res.data, statusIdx: statusActive,  isLoading: false })
-                // this.printReport()
-            }).catch((err) => {
-                console.log(err)
-            })
-    }
+    // getReportFilter = (status, statusActive) => {
+    //     this.setState({ isLoading: true })
+    //     axios.get(`${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`)
+    //         // console.log("cek", statusActive)
+    //         .then((res) => {
+    //             console.log("report filt", res.data, statusActive)
+    //             this.setState({ report: res.data, statusIdx: statusActive, isLoading: false })
+    //             // this.printReport()
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
 
     printReport = () => {
         return this.state.report.map((value, index) => {
@@ -60,7 +120,7 @@ class TrackingPage extends React.Component {
                     <div className='p-2'>
                         <div>
                             <p> TRANSACTION DATE : {value.datetransaction}</p>
-                            <p> REPORT DATE : {value.date}</p>
+                            <p> REPORT DATE : {value.reportdate}</p>
                             <p> PRODUCT CODE : {value.productcd}</p>
                             <p> DETAIL CASE : {value.detail}</p>
                             <p> ROOT CAUSE : {value.cause}</p>
@@ -81,8 +141,12 @@ class TrackingPage extends React.Component {
 
 
     render() {
+        const { report, process } = this.state
+        const isReportEmpty = report.length === 0
+        const showDatePickers = !isReportEmpty || process;
+
         return (
-            <div className='container p-5 mt-4'>
+            <div className='container p-5 mt-2'>
                 <h1 className='text-center'>REPORT LOG HISTORY</h1>
 
                 <div>
@@ -99,19 +163,59 @@ class TrackingPage extends React.Component {
                             })
                         }
                     </div>
-                    <div style={{ marginTop: "20px" }}>
-                    {   this.state.isLoading ? (
-                        <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                            <Image src={lotteLoading} width={80} height={80} style={{display: "flex", justifyContent: "center"}} />
+                    {showDatePickers && (
+                        <div className="row">
+                            <div className="col" style={{ zIndex: 30 }}>
+                                <label>From Date: </label>
+                                <DatePicker
+                                    selected={this.state.startDate}
+                                    onChange={this.handleStartDateChange}
+                                    style={{ width: "100%" }}
+                                    popperPlacement="bottom-start"
+                                    placeholderText="Choose a start date"
+                                />
+                            </div>
+                            <div
+                                className="col text-end"
+                                style={{ position: "relative", zIndex: 20, marginLeft: "auto", textAlign: "left" }}
+                            >
+                                <div className="auto">
+                                    <label>To Date: </label>
+                                </div>
+                                <DatePicker
+                                    selected={this.state.endDate}
+                                    onChange={this.handleEndDateChange}
+                                    style={{ width: "100%" }}
+                                    popperPlacement="bottom-end"
+                                    placeholderText="Choose an end date"
+                                />
+                            </div>
                         </div>
+                    )}
+                    {!isReportEmpty && !process && 
+                    <div className='d-flex justify-content-center'>
+                        <Button color="warning" style={{ marginTop: 15, width: 127 }} onClick={this.btnReset}>Reset<BiReset/></Button>
+                    </div>
+                    }
+                    <div style={{ marginTop: "20px" }}>
+                        {this.state.isLoading ? (
+                            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <Image src={lotteLoading} width={80} height={80} style={{ display: "flex", justifyContent: "center" }} />
+                            </div>
                         ) : (
+                            <div>
+                                {
+                                    this.state.report.length == 0 ? (
+                                        <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Data not found.</h4>
+                                    ) : this.printReport()
 
-                            this.printReport()
-                           
+                                }
+
+                            </div>
+
                         )
                         }
                     </div>
-                    {/* {this.printReport()} */}
                 </div>
             </div>
         );
@@ -120,7 +224,6 @@ class TrackingPage extends React.Component {
 
 const mapToProps = ({ userReducer }) => {
     console.log("tes report", userReducer.reportList)
-    // console.log("tes data", props.report)
     return {
         report: userReducer.reportList
 

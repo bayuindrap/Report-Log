@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisPage from './pages/RegisPage'
-import { loginAction, reportAction, userAction, historyAction, keepLogin, logoutAction } from './redux/actions/userAction'
+import { loginAction, reportAction, userAction, keepLogin, logoutAction, historyAction} from './redux/actions/userAction'
 import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
@@ -37,7 +37,7 @@ class App extends React.Component {
   }
 
    checkSession = () => {
-    const SESSION_EXPIRATION_TIME = 1 * 60 * 1000; // Set the session expiration time (30 minutes)
+    const SESSION_EXPIRATION_TIME = 30 * 60 * 1000; // Set the session expiration time (30 minutes)
   
     const sessionTimestamp = localStorage.getItem('sessionTimestamp');
     if (sessionTimestamp) {
@@ -96,4 +96,4 @@ const mapToProps = (state) => {
   }
 }
 
-export default connect(mapToProps, { loginAction, reportAction, historyAction, keepLogin, logoutAction})(App);
+export default connect(mapToProps, { loginAction, reportAction, keepLogin, historyAction, logoutAction})(App);
