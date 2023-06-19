@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisPage from './pages/RegisPage'
-import { loginAction, reportAction, userAction, keepLogin, logoutAction, historyAction} from './redux/actions/userAction'
+import { loginAction, reportAction, userAction, historyAction, keepLogin, logoutAction } from './redux/actions/userAction'
 import { connect } from 'react-redux'
 import NavbarComp from './components/NavbarComp'
 import FooterComp from './components/FooterComp'
@@ -13,8 +13,8 @@ import ReportPage from './pages/ReportPage'
 import StatusPage from './pages/StatusPage'
 import TrackingPage from './pages/TrackingPage'
 import TableHistory from './pages/TableHistory'
-
 import CryptoJS from 'crypto-js';
+import ProcessHistory from './pages/ProcessHistory'
 
 
 const encryptionKey = 'myEncryptionKey'
@@ -33,11 +33,11 @@ class App extends React.Component {
     this.props.reportAction()
     this.props.historyAction()
     this.props.keepLogin()
-    this.checkSession()
+    // this.checkSession()
   }
 
    checkSession = () => {
-    const SESSION_EXPIRATION_TIME = 30 * 60 * 1000; // Set the session expiration time (30 minutes)
+    const SESSION_EXPIRATION_TIME = 60 * 60 * 1000; // Set the session expiration time (30 minutes)
   
     const sessionTimestamp = localStorage.getItem('sessionTimestamp');
     if (sessionTimestamp) {
@@ -74,6 +74,7 @@ class App extends React.Component {
             <Route path='/track-page' element={<TrackingPage/>} />
             <Route path='/report-page' element={<ReportPage />} />
             <Route path='/table-page' element={<TableHistory />} />
+            <Route path='/process-page' element={<ProcessHistory />} />
           </Routes>
           <FooterComp/>
         
@@ -96,4 +97,4 @@ const mapToProps = (state) => {
   }
 }
 
-export default connect(mapToProps, { loginAction, reportAction, keepLogin, historyAction, logoutAction})(App);
+export default connect(mapToProps, { loginAction, reportAction, historyAction, keepLogin, logoutAction})(App);

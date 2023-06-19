@@ -123,7 +123,7 @@ class LoginPage extends React.Component {
                 icon: 'success',
                 title: 'Login Success',
                 showConfirmButton: false,
-                timer: 1200,
+                timer: 1260,
                 width: "223px"
               })
             if (this.props.role == "user") {
@@ -131,8 +131,9 @@ class LoginPage extends React.Component {
             }
             return <Navigate to="report-page" />
         }
+        
         return (
-            <div className='p-5 mt-5'>
+            <div className='p-5 mt-4'>
                 <h1 style={{ textAlign: "center" }}>
                     LOGIN
                 </h1>

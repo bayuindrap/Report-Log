@@ -2,7 +2,7 @@ import axios from "axios"
 import { API_URL } from "../../helper"
 import CryptoJS from 'crypto-js';
 
-const encryptionKey = 'encriptiondKey'
+const encryptionKey = 'myEncryptionKey'
 
 // export const loginAction = (username, password) => {
 //     return async (dispatch) => {
@@ -21,8 +21,6 @@ const encryptionKey = 'encriptiondKey'
 //         }
 //     }
 // }
-
-
 
 export const loginAction = (username, password) => {
     return async (dispatch) => {
@@ -63,7 +61,7 @@ export const reportAction = () => {
     return async (dispatch, getState) => {
         try {
             let res = await axios.get(`${API_URL}/report`)
-            // console.log("data report", res.data)
+            console.log("data report", res.data)
             dispatch({
                 type: "GET_REPORT",
                 payload: res.data
@@ -106,60 +104,64 @@ export const getDecryptedData = () => {
     return null;
 }
 
-export const keepLogin = () => async (dispatch) => {
-    try {
-      let local = getDecryptedData();
-      if (local) {
-        let res = await dispatch(loginAction(local.username, local.password));
-        if (res.success) {
-          // Set session timeout (e.g., 30 minutes)
-          const sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
-  
-          // Get the current timestamp
-          const currentTime = new Date().getTime();
-  
-          // Get the last activity timestamp from local storage
-          const lastActivityTime = parseInt(localStorage.getItem("lastActivityTime"));
-  
-          // Check if the session has expired
-          if (lastActivityTime && currentTime - lastActivityTime > sessionTimeout) {
-            // Session expired, remove user data from local storage and logout
-            localStorage.removeItem("data");
-            dispatch(logoutAction());
-            return; // Exit the function
-          }
-  
-          // Update the last activity timestamp in local storage
-          localStorage.setItem("lastActivityTime", currentTime.toString());
-  
-          dispatch({ type: "KEEP_LOGIN_SUCCESS" });
-        }
-      } else {
-        // No local data found, remove user data from local storage and logout
-        localStorage.removeItem("data");
-        dispatch(logoutAction());
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
 // export const keepLogin = () => async (dispatch) => {
 //     try {
 //       let local = getDecryptedData();
 //       if (local) {
 //         let res = await dispatch(loginAction(local.username, local.password));
 //         if (res.success) {
+//           // Set session timeout (e.g., 30 minutes)
+//           const sessionTimeout = 60 * 60 * 1000; // 30 minutes in milliseconds
+  
+//           // Get the current timestamp
+//           const currentTime = new Date().getTime();
+  
+//           // Get the last activity timestamp from local storage
+//           const lastActivityTime = parseInt(localStorage.getItem("lastActivityTime"));
+  
+//           // Check if the session has expired
+//           if (lastActivityTime && currentTime - lastActivityTime > sessionTimeout) {
+//             // Session expired, remove user data from local storage and logout
+//             localStorage.removeItem("data");
+//             dispatch(logoutAction());
+//             return; // Exit the function
+//           }
+  
+//           // Update the last activity timestamp in local storage
+//           localStorage.setItem("lastActivityTime", currentTime.toString());
+  
 //           dispatch({ type: "KEEP_LOGIN_SUCCESS" });
 //         }
 //       } else {
-//         localStorage.removeItem("data"); // Remove user data from local storage
-//         dispatch(logoutAction())
+//         // No local data found, remove user data from local storage and logout
+//         localStorage.removeItem("data");
+//         dispatch(logoutAction());
 //       }
 //     } catch (error) {
 //       console.log(error);
 //     }
 //   };
+
+
+
+export const keepLogin = () => async (dispatch) => {
+    try {
+      let local = getDecryptedData();
+      if (local) {
+        let res = await dispatch(loginAction(local.username, local.password));
+        if (res.success) {
+          dispatch({ type: "KEEP_LOGIN_SUCCESS" });
+        }
+      } else {
+        localStorage.removeItem("data"); // Remove user data from local storage
+        dispatch(logoutAction())
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
 
 // export const keepLogin = async () => {
 //     try {

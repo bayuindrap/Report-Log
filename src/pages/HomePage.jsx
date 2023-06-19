@@ -123,6 +123,7 @@ class HomePage extends React.Component {
                 imgcorp: url,
                 orderid: this.orderId.value,
                 productcd: this.productCode.value,
+                invoice: this.invoiceNo.value,
                 datetransaction: dateToSend,
                 // date: this.state.startDate2.toISOString().substring(0, 10),
                 reportdate: this.state.startDate2.toLocaleDateString(),
@@ -157,14 +158,13 @@ class HomePage extends React.Component {
         }
     }
 
-
-    render() {
+    printForm = () => {
         return (
 
             this.state.isLoading ? <Image fluid src={lotteLoading} width={50} height={50} />
                 :
 
-                <div className='p-5 mt-5' style={{}} >
+                <div className='p-5 mt-4' style={{}} >
 
                     <h1 style={{ textAlign: "center" }}>REPORT PAGE</h1>
                     <div className='shadow p-3'>
@@ -179,11 +179,11 @@ class HomePage extends React.Component {
                             <FormGroup>
                                 <Label>Corp</Label>
                                 <InputGroup>
-                                    <Input type="select" placeholder="Pilih Corp" value={this.state.selectedValue} onChange={this.handleSelectChange}>
+                                    <Input type="select" placeholder="select corp" value={this.state.selectedValue} onChange={this.handleSelectChange}>
                                         <option value="">Select corp</option>
-                                        <option value="LMI,https://i.postimg.cc/wvqr8n0q/logo-LMM-01.png">LMI</option>
+                                        <option value="LMI,https://i.postimg.cc/Y9sFThjc/LMI.png">LMI</option>
                                         {/* <option value="LSI,https://i.postimg.cc/7LVBVmDp/LOGO-LSI.png">LSI</option> */}
-                                        <option value="LSI,https://i.postimg.cc/DfqYgnh5/LSI-LOGO.png">LSI</option>
+                                        <option value="LSI,https://i.postimg.cc/0544RRG0/LSI.png">LSI</option>
                                     </Input>
                                 </InputGroup>
                             </FormGroup>
@@ -193,10 +193,39 @@ class HomePage extends React.Component {
                                     Order Id
                                 </Label>
                                 <Input
-                                    placeholder='fill order id'
+                                    placeholder='insert order id'
                                     id="order"
-                                    type="text"
+                                    type="number"
+                                    onWheel={(e) => e.currentTarget.blur()}
                                     innerRef={(element) => this.orderId = element}
+                                />
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Label for="report">
+                                    Product Code
+                                </Label>
+                                <Input
+                                    placeholder='insert code product'
+                                    id="order"
+                                    type="number"
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    innerRef={(element) => this.productCode = element}
+
+                                />
+                            </FormGroup>
+
+                            <FormGroup>
+                                <Label for="report">
+                                    Invoice Number
+                                </Label>
+                                <Input
+                                    placeholder='insert invoice number'
+                                    id="order"
+                                    type="number"
+                                    onWheel={(e) => e.currentTarget.blur()}
+                                    innerRef={(element) => this.invoiceNo = element}
+
                                 />
                             </FormGroup>
 
@@ -226,25 +255,13 @@ class HomePage extends React.Component {
                                 </InputGroup>
                             </FormGroup>
 
-                            <FormGroup>
-                                <Label for="report">
-                                    Product Code
-                                </Label>
-                                <Input
-                                    placeholder='fill code product'
-                                    id="order"
-                                    type="number"
-                                    innerRef={(element) => this.productCode = element}
-
-                                />
-                            </FormGroup>
 
                             <FormGroup>
                                 <Label for="report">
                                     Case Description
                                 </Label>
                                 <Input
-                                    placeholder='fill case description report'
+                                    placeholder='insert case description report'
                                     id="report"
                                     name="text"
                                     type="textarea"
@@ -277,6 +294,17 @@ class HomePage extends React.Component {
                         </Form>
                     </div>
                 </div>
+
+
+        );
+    }
+
+
+    render() {
+        return (
+            <div>
+                {this.printForm()}
+            </div>
 
 
         );

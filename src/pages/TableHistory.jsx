@@ -5,7 +5,6 @@ import { Table, Pagination, Image, Form, Col, Row, InputGroup, Card, FormGroup }
 import { connect } from 'react-redux';
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-import { BiReset } from "react-icons/bi";
 import { ToastContainer, toast } from 'react-toastify'
 import { reportAction } from '../redux/actions';
 import { FiDownload } from "react-icons/fi";
@@ -13,6 +12,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { API_URL } from '../helper';
 import lotteLoading from "../assets/Logo-Lotte.gif"
+import { BiReset } from "react-icons/bi";
 
 
 class TableHistory extends React.Component {
@@ -29,9 +29,18 @@ class TableHistory extends React.Component {
             endDate: null,
 
         }
+        this.handleStartDateChange = this.handleStartDateChange.bind(this);
+        this.handleEndDateChange = this.handleEndDateChange.bind(this);
 
     };
 
+    // handleStartDateChange = (date) => {
+    //     this.setState({ startDate: date });
+    // };
+
+    // handleEndDateChange = (date) => {
+    //     this.setState({ endDate: date });
+    // };
 
     handleStartDateChange = (date) => {
         this.setState({ startDate: date }, () => {
@@ -72,13 +81,13 @@ class TableHistory extends React.Component {
                 const filteredReport = res.data.filter((report) => {
                     const reportDate = new Date(report.reportdate);
                     if (formattedStartDate && formattedEndDate) {
-                        return reportDate >= new Date(formattedStartDate) && reportDate <= new Date(formattedEndDate);
+                        return reportDate >= startDate && reportDate <= endDate;
                     }
-                    else if (formattedStartDate) {
-                        return reportDate >= new Date(formattedStartDate);
+                    if (formattedStartDate) {
+                        return reportDate >= startDate;
                     }
-                    else if (formattedEndDate) {
-                        return reportDate <= new Date(formattedEndDate);
+                    if (formattedEndDate) {
+                        return reportDate <= endDate;
                     }
                     return true;
                 });
@@ -117,7 +126,7 @@ class TableHistory extends React.Component {
                                         } */}
                                 </Col>
                             </Row>
-                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "80vh" }}>
+                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "65vh" }}>
 
 
                                 <Table striped bordered hover>
@@ -137,7 +146,7 @@ class TableHistory extends React.Component {
                                     </thead>
 
 
-                                    <tbody className='text-center'>
+                                    <tbody>
                                         {
                                             this.state.report.map((value, index) => (
                                                 // let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
@@ -155,8 +164,7 @@ class TableHistory extends React.Component {
                                                     <td>{value.solvedate}</td>
 
                                                 </tr>
-                                            ))
-                                            }
+                                            ))}
                                     </tbody>
 
                                 </Table>
@@ -199,14 +207,16 @@ class TableHistory extends React.Component {
 
     btnReset = () => {
         this.setState({
-            report: [],
+            report:[],
+            isLoading: false,
             statusIdx: 0,
             selectedValue: '',
             process: false,
             startDate: null,
             endDate: null,
-          });
+        })
     }
+
 
 
 
@@ -214,7 +224,6 @@ class TableHistory extends React.Component {
         const { report, process } = this.state
         const isReportEmpty = report.length === 0
         const showDatePickers = !isReportEmpty || process;
-
         return (
 
             <div className=' p-5 mt-1'>
@@ -302,7 +311,7 @@ class TableHistory extends React.Component {
                             <div>
                                 {
                                     this.state.report.length == 0 ? (
-                                        <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "170px" }}>Data not found.</h4>
+                                        <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "170px" }}>Select category to show data.</h4>
                                     ) : this.printTable()
 
                                 }

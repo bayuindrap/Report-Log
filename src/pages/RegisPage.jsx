@@ -60,10 +60,10 @@ class RegisPage extends React.Component {
             return Swal.fire({
                 position: 'center',
                 icon: 'warning',
-                title: `Form data can't be empty.`,
+                title: `Data user can't be empty.`,
                 showConfirmButton: false,
                 timer: 775,
-                width: "223px"
+                width: "218px"
               })
         } else {
             axios.post(`${API_URL}/dataUser`, {
@@ -107,7 +107,7 @@ class RegisPage extends React.Component {
 
     render() {
         return (
-            <div className='p-5 mt-5'>
+            <div className='p-5 mt-4'>
                 <h2 style={{ textAlign: "center" }}>ADD USER</h2>
 
 
