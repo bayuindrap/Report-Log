@@ -1,8 +1,8 @@
 import React from 'react';
 import { API_URL } from '../helper';
 import axios from 'axios';
-import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText } from 'reactstrap'
-import { Form, InputGroup, FormGroup, Modal, FormControl } from 'react-bootstrap';
+import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText, Label } from 'reactstrap'
+import { Form, InputGroup, FormGroup, Modal, FormControl, Image } from 'react-bootstrap';
 import Swal from 'sweetalert2'
 import { CgSandClock } from "react-icons/cg";
 import { AiOutlineCheck } from "react-icons/ai";
@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import { reportAction, userAction } from '../redux/actions';
 import lotteLoading from "../assets/Logo-Lotte.gif"
 import { AiTwotoneDelete } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BiReset } from "react-icons/bi";
 
 
 
@@ -23,7 +25,9 @@ class ReportPage extends React.Component {
             dateNow: new Date(),
             modal: false,
             reportId: null,
-            processedBy: null
+            processedBy: null,
+            isLoading: false,
+            dataAvailable: true
         }
     }
 
@@ -59,30 +63,6 @@ class ReportPage extends React.Component {
                 console.log(err)
             })
     }
-
-    // btnSolved = (id) => {
-    //     if(this.props.report.status === "On Check🔎") {
-    //         console.log("cek status", this.props.report.status)
-    //         return Swal.fire({
-    //             position: 'center',
-    //             icon: 'warning',
-    //             title: 'Process The Report First.',
-    //             showConfirmButton: false,
-    //             timer: 875,
-    //             width: "223px"
-    //         })
-    //         return
-    //     }
-    //     axios.patch(`${API_URL}/report/${id}`, {
-    //         status: "Solved✔",
-    //         solvedate: this.state.dateNow.toLocaleDateString(),
-    //     })
-    //         .then((res) => {
-    //             this.props.reportAction()
-    //         }).catch((error) => {
-    //             console.log(error)
-    //         })
-    // }
 
     btnSolved = (id) => {
         const report = this.props.report.find((value) => value.id === id);
@@ -152,48 +132,6 @@ class ReportPage extends React.Component {
                 console.log(error);
             });
     }
-
-    // toggle = (id) => {
-    //     // this.setState({
-    //     //     modal: !this.state.modal,
-    //     //     reportId: id
-    //     // })
-    //     const { report, username } = this.props;
-    //     const selectedReport = report.find((value) => value.id === id);
-    //     // console.log("cek isi", this.props.report.handledby)
-    //     // const selectedReport = this.props.report.find((value) => value.id === id);
-    //     if (selectedReport.status === "On Check🔎") {
-    //         Swal.fire({
-    //             position: 'center',
-    //             icon: 'warning',
-    //             title: 'Process Report First.',
-    //             showConfirmButton: false,
-    //             timer: 875,
-    //             width: "215px"
-    //         });
-    //         return
-    //     }
-
-    //     if (selectedReport.handledby !== username) {
-    //         Swal.fire({
-    //             position: 'center',
-    //             icon: 'warning',
-    //             title: 'You are not authorized to mark this report as solved.',
-    //             showConfirmButton: false,
-    //             timer: 1100,
-    //             width: "250px"
-    //         });
-    //         return
-    //     }
-    //     this.setState(prevState => ({
-    //         modal: !prevState.modal,
-    //         reportId: id
-    //     }));
-
-    //     const body = document.getElementsByTagName("body")[0]
-    //     body.classList.toggle("modal-open")
-
-    // }
 
     toggle = (id) => {
         const { report, username } = this.props;
@@ -295,32 +233,6 @@ class ReportPage extends React.Component {
 
     }
 
-    // btnDelete = (id) => {
-    //     Swal.fire({
-    //         title: 'Do you want to delete report?',
-    //         confirmButtonText: 'Delete',
-    //         showCancelButton: true,
-    //       }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             axios.delete(`${API_URL}/report/${id}`)
-    //                 .then((res) => {
-    //                     this.props.reportAction();
-    //                     Swal.fire({
-    //                         position: 'center',
-    //                         icon: 'success',
-    //                         title: 'Report has been deleted.',
-    //                         showConfirmButton: false,
-    //                         timer: 1350,
-    //                         width: '223px'
-    //                     });
-    //                 })
-    //                 .catch((error) => {
-    //                     console.log(error);
-    //                 });
-
-    //         } 
-    //       })
-    // }
 
     btnDelete = async (id) => {
         const result = await Swal.fire({
@@ -351,8 +263,6 @@ class ReportPage extends React.Component {
         }
     };
 
-
-    
     printReport = () => {
         // const renderValue = (label, field) => {
         //     if (field && field.trim() !== "") {
@@ -361,15 +271,15 @@ class ReportPage extends React.Component {
         //     return null;
         // };
 
-        
+
         const renderValue = (field, label) => {
             if (field && field.trim() !== "") {
-              return <p>{label} : {field}</p>;
+                return <p>{label} : {field}</p>;
             }
             return null;
-          };
+        };
         return this.props.report.map((value, index) => {
-            
+
             if (value.status === "Solved✔") {
                 return <div></div>
             }
@@ -461,14 +371,86 @@ class ReportPage extends React.Component {
         })
     }
 
+    printFilter = () => {
+        <div>
+            <FormGroup>
+                <Label>Search</Label>
+                <Input type="text" id="text" placeholder="Input user report" />
+            </FormGroup>
+        </div>
+    }
+
+    btnSearch = () => {
+        this.setState({ isLoading: true })
+        this.props.reportAction(this.searchName.value)
+            .then(() => {
+                setTimeout(() => {
+                    this.setState({ isLoading: false, isFiltered: true });
+                    if(this.props.report.length === 0) {
+                        this.setState({dataAvailable: false})
+                    }else{
+                        this.setState({dataAvailable: true})
+                    }
+                }, 1100);
+            })
+        console.log("datanama", this.searchName.value)
+    }
+
+
+    btnClear = () => {
+        // this.clearFilter()
+        this.setState({ isFiltered: false, dataAvailable: true })
+        this.props.reportAction()
+        this.searchName.value = ""
+    }
+
+
+
 
     render() {
+        const { isFiltered, isLoading, dataAvailable } = this.state;
+        const noData = isFiltered && !isLoading && this.searchName.value !== '';
+
         return (
             <div className='container p-5 mt-4'>
                 <h1 className='text-center'>Report Page Admin</h1>
-
+                <div className='mb-3'>
+                    <FormGroup>
+                        <Label>Search</Label>
+                        <Input type="text" id="text" placeholder="Input user name"
+                            style={{ width: 250, marginBottom: 5 }}
+                            innerRef={(element) => this.searchName = element}
+                        />
+                        {isFiltered && (
+                            <Button color="danger" onClick={this.btnClear}>Clear<BiReset /></Button>
+                        )}
+                        <Button color="primary" onClick={this.btnSearch}>Search <AiOutlineSearch /></Button>
+                    </FormGroup>
+                </div>
                 <div>
-                    {this.printReport()}
+                    {isLoading ? (
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            <Image src={lotteLoading} width={100} height={100} style={{ display: "flex", justifyContent: "center" }} />
+                        </div>
+                    ) : (
+                        <div>
+                            {
+                                dataAvailable ? (
+                                    this.printReport()
+                                ) : (
+
+                                     <h5 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Data not found.</h5>
+                                )
+                            }
+                        </div>
+                        //  noData ? (
+
+                        //      ) : (
+                        //          this.printReport()
+                        //     )
+                        // this.printReport()
+                    )
+                    }
                 </div>
 
             </div>

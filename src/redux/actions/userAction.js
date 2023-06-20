@@ -57,11 +57,16 @@ export const userAction = () => {
     }
 }
 
-export const reportAction = () => {
-    return async (dispatch, getState) => {
+export const reportAction = (name) => {
+    return async (dispatch) => {
         try {
-            let res = await axios.get(`${API_URL}/report`)
-            console.log("data report", res.data)
+            console.log("data report", name)
+            let res;
+            if(name) {
+                res = await axios.get(`${API_URL}/report?name=${name}`)
+            } else {
+                 res = await axios.get(`${API_URL}/report`)
+            }
             dispatch({
                 type: "GET_REPORT",
                 payload: res.data
