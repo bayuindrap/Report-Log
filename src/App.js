@@ -65,7 +65,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <NavbarComp loading={this.state.loading}/>
+        <NavbarComp/>
           <Routes>
             <Route path='/' element={<LoginPage />} />
             <Route path='/home-page' element={<HomePage />} />

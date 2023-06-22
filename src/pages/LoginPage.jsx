@@ -78,7 +78,7 @@ class LoginPage extends React.Component {
             return Swal.fire({
                 position: 'center',
                 icon: 'error',
-                title: 'Wrong Username or Password',
+                title: 'Incorrect Username or Password',
                 showConfirmButton: false,
                 timer: 800,
                 width: "223px"

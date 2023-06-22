@@ -13,8 +13,7 @@ import { reportAction, userAction } from '../redux/actions';
 import lotteLoading from "../assets/Logo-Lotte.gif"
 import { AiTwotoneDelete } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
-import { BiReset } from "react-icons/bi";
-
+import { GiBroom } from "react-icons/gi";
 
 
 class ReportPage extends React.Component {
@@ -40,28 +39,71 @@ class ReportPage extends React.Component {
         }
     }
 
+    handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+        //   this.handleClick();
+        this.btnSearch()
+        }
+      }
 
-    btnProcess = (id) => {
-        axios.patch(`${API_URL}/report/${id}`, {
-            status: "On Progress⏳",
-            // cause: this.rootCause.value,
-            // solution: this.solution.value
-            handledby: this.props.username
-        })
-            .then((res) => {
-                this.props.reportAction()
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Data has been updated.',
-                    showConfirmButton: false,
-                    timer: 1250,
-                    width: "223px"
-                })
-                this.setState({ modal: false, processedBy: this.props.username })
-            }).catch((err) => {
-                console.log(err)
+
+    // btnProcess = (id) => {
+    //     axios.patch(`${API_URL}/report/${id}`, {
+    //         status: "On Progress⏳",
+    //         // cause: this.rootCause.value,
+    //         // solution: this.solution.value
+    //         handledby: this.props.username
+    //     })
+    //         .then((res) => {
+    //             this.props.reportAction()
+    //             Swal.fire({
+    //                 position: 'center',
+    //                 icon: 'success',
+    //                 title: 'Data has been updated.',
+    //                 showConfirmButton: false,
+    //                 timer: 1250,
+    //                 width: "223px"
+    //             })
+    //             this.setState({ modal: false, processedBy: this.props.username })
+    //         }).catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
+
+    btnProcess = async (id) => {
+        const result = await Swal.fire({
+            title: 'Do you want to process this report?',
+            confirmButtonText: '<span style="color: black">Process</span>',
+            showCancelButton: true,
+            reverseButtons: true,
+            buttonsStyling: true,
+            confirmButtonColor: '#FFCA2C',
+            cancelButtonColor: 'blue',
+        });
+        if(result.isConfirmed) {
+            axios.patch(`${API_URL}/report/${id}`, {
+                status: "On Progress⏳",
+                // cause: this.rootCause.value,
+                // solution: this.solution.value
+                handledby: this.props.username
             })
+                .then((res) => {
+                    this.props.reportAction()
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Data has been updated.',
+                        showConfirmButton: false,
+                        timer: 1250,
+                        width: "223px"
+                    })
+                    this.setState({ modal: false, processedBy: this.props.username })
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+        }
+
     }
 
     btnSolved = (id) => {
@@ -115,23 +157,75 @@ class ReportPage extends React.Component {
             });
     }
 
-    btnDelete = (id) => {
-        axios.delete(`${API_URL}/report/${id}`)
-            .then((res) => {
+    btnSearch = () => {
+        this.setState({ isLoading: true })
+        this.props.reportAction(this.searchName.value)
+            .then(() => {
+                setTimeout(() => {
+                    this.setState({ isLoading: false, isFiltered: true });
+                    if(this.props.report.length === 0) {
+                        this.setState({dataAvailable: false})
+                    }else{
+                        this.setState({dataAvailable: true})
+                    }
+                }, 1100);
+            })
+        console.log("datanama", this.searchName.value)
+    }
+
+    btnClear = () => {
+        // this.clearFilter()
+        this.setState({ isFiltered: false, dataAvailable: true })
+        this.props.reportAction()
+        this.searchName.value = ""
+    }
+
+    // btnDelete = (id) => {
+    //     axios.delete(`${API_URL}/report/${id}`)
+    //         .then((res) => {
+    //             this.props.reportAction();
+    //             Swal.fire({
+    //                 position: 'center',
+    //                 icon: 'success',
+    //                 title: 'Report has been deleted.',
+    //                 showConfirmButton: false,
+    //                 timer: 1250,
+    //                 width: '223px'
+    //             });
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }
+
+    btnDelete = async (id) => {
+        const result = await Swal.fire({
+            title: 'Do you want to delete this report?',
+            confirmButtonText: 'Delete',
+            showCancelButton: true,
+            reverseButtons: true,
+            buttonsStyling: true,
+            confirmButtonColor: 'red',
+            cancelButtonColor: 'blue',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${API_URL}/report/${id}`);
                 this.props.reportAction();
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
                     title: 'Report has been deleted.',
                     showConfirmButton: false,
-                    timer: 1250,
-                    width: '223px'
+                    timer: 1350,
+                    width: '223px',
                 });
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.log(error);
-            });
-    }
+            }
+        }
+    };
 
     toggle = (id) => {
         const { report, username } = this.props;
@@ -234,34 +328,6 @@ class ReportPage extends React.Component {
     }
 
 
-    btnDelete = async (id) => {
-        const result = await Swal.fire({
-            title: 'Do you want to delete this report?',
-            confirmButtonText: 'Delete',
-            showCancelButton: true,
-            reverseButtons: true,
-            buttonsStyling: true,
-            confirmButtonColor: 'red',
-            cancelButtonColor: 'blue',
-        });
-
-        if (result.isConfirmed) {
-            try {
-                await axios.delete(`${API_URL}/report/${id}`);
-                this.props.reportAction();
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Report has been deleted.',
-                    showConfirmButton: false,
-                    timer: 1350,
-                    width: '223px',
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
 
     printReport = () => {
         // const renderValue = (label, field) => {
@@ -380,29 +446,6 @@ class ReportPage extends React.Component {
         </div>
     }
 
-    btnSearch = () => {
-        this.setState({ isLoading: true })
-        this.props.reportAction(this.searchName.value)
-            .then(() => {
-                setTimeout(() => {
-                    this.setState({ isLoading: false, isFiltered: true });
-                    if(this.props.report.length === 0) {
-                        this.setState({dataAvailable: false})
-                    }else{
-                        this.setState({dataAvailable: true})
-                    }
-                }, 1100);
-            })
-        console.log("datanama", this.searchName.value)
-    }
-
-
-    btnClear = () => {
-        // this.clearFilter()
-        this.setState({ isFiltered: false, dataAvailable: true })
-        this.props.reportAction()
-        this.searchName.value = ""
-    }
 
 
 
@@ -413,24 +456,25 @@ class ReportPage extends React.Component {
 
         return (
             <div className='container p-5 mt-4'>
-                <h1 className='text-center'>Report Page Admin</h1>
+                <h1 className='text-center'>Report Page</h1>
                 <div className='mb-3'>
                     <FormGroup>
                         <Label>Search</Label>
                         <Input type="text" id="text" placeholder="Input user name"
                             style={{ width: 250, marginBottom: 5 }}
                             innerRef={(element) => this.searchName = element}
+                            onKeyDown={this.handleKeyPress}
                         />
                         {isFiltered && (
-                            <Button color="danger" onClick={this.btnClear}>Clear<BiReset /></Button>
+                            <Button color="danger" onClick={this.btnClear} style={{width: 103}}>Clear<GiBroom /></Button>
                         )}
-                        <Button color="primary" onClick={this.btnSearch}>Search <AiOutlineSearch /></Button>
+                        <Button color="info" onClick={this.btnSearch} >Search <AiOutlineSearch /></Button>
                     </FormGroup>
                 </div>
                 <div>
                     {isLoading ? (
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                            <Image src={lotteLoading} width={100} height={100} style={{ display: "flex", justifyContent: "center" }} />
+                            <Image src={lotteLoading} width={110} height={110} style={{ display: "flex", justifyContent: "center" }} />
                         </div>
                     ) : (
                         <div>

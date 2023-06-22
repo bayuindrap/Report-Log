@@ -34,13 +34,12 @@ class TableHistory extends React.Component {
 
     };
 
-    // handleStartDateChange = (date) => {
-    //     this.setState({ startDate: date });
-    // };
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({ isLoading: false });
+        }, 1100);
+    }
 
-    // handleEndDateChange = (date) => {
-    //     this.setState({ endDate: date });
-    // };
 
     handleStartDateChange = (date) => {
         this.setState({ startDate: date }, () => {
@@ -92,7 +91,12 @@ class TableHistory extends React.Component {
                     return true;
                 });
                 console.log("data filter report", filteredReport, statusActive);
-                this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+                setTimeout(() => {
+                    this.setState({ isLoading: false, report: filteredReport, statusIdx: statusActive });
+                }, 1150);
+                // this.setState({ report: filteredReport, 
+                //     statusIdx: statusActive,
+                //      isLoading: false });
             })
             .catch((err) => {
                 console.log(err);
@@ -305,7 +309,7 @@ class TableHistory extends React.Component {
                     <div style={{ marginTop: "20px" }}>
                         {this.state.isLoading ? (
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Image src={lotteLoading} width={100} height={100} style={{ display: "flex", justifyContent: "center" }} />
+                                <Image src={lotteLoading} width={105} height={105} style={{ display: "flex", justifyContent: "center" }} />
                             </div>
                         ) : (
                             <div>

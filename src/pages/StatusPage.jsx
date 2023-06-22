@@ -1,6 +1,6 @@
 import React from "react";
 import { API_URL } from "../helper";
-import { userAction } from "../redux/actions";
+import { historyAction, userAction } from "../redux/actions";
 import axios from "axios";
 import { connect } from "react-redux";
 import { Badge, Button } from 'reactstrap'
@@ -19,11 +19,10 @@ class StatusPage extends React.Component {
             status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
             report: [],
             statusIdx: 0,
-            isLoading: false
+            isLoading: false,
+            process: false
         }
     }
-
-
 
 
     componentDidMount() {
@@ -55,10 +54,9 @@ class StatusPage extends React.Component {
 
     getReportFilter = (status, statusActive, startDate, endDate) => {
         this.setState({ isLoading: true })
-        console.log("start date", startDate?.toLocaleDateString());
         const formattedStartDate = startDate?.toLocaleDateString();
         const formattedEndDate = endDate?.toLocaleDateString();
-        const apiUrl = `${API_URL}/report${statusActive > 0 ? `?status=${status}` : ""}`;
+        const apiUrl = `${API_URL}/report?iduser=${this.props.iduser}${statusActive > 0 ? `&status=${status}` : ""}`;
 
         axios.get(apiUrl)
             .then((res) => {
@@ -75,8 +73,13 @@ class StatusPage extends React.Component {
                     }
                     return true;
                 });
-                console.log("data filter report", filteredReport, statusActive);
-                this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+                console.log("data filter report", statusActive);
+                // this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+                setTimeout(() => {
+                    this.setState({ isLoading: false, report: filteredReport, statusIdx: statusActive, process: true });
+                    console.log("isi state report", this.state.report)
+                }, 1150);
+                
             })
             .catch((err) => {
                 console.log(err);
@@ -100,9 +103,9 @@ class StatusPage extends React.Component {
             if (field && field.trim() !== "") {
                 return <p>{label} : {field}</p>;
             }
-            return null;
+            return null
         };
-        const { historyReport } = this.props;
+        
         return this.state.report.map((value, index) => {
             console.log("isi value", value)
             let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
@@ -134,7 +137,6 @@ class StatusPage extends React.Component {
                     </div>
 
                     <div className='row'>
-
                         <img src={value.imgcorp} style={{ width: "20%" }} />
                     </div>
 
@@ -211,7 +213,7 @@ class StatusPage extends React.Component {
                             </div>
                         </div>
                     )}
-                    {!isReportEmpty && !process &&
+                    {!isReportEmpty && (process || !process) &&
                         <div className='d-flex justify-content-center'>
                             <Button color="warning" style={{ marginTop: 15, width: 127 }} onClick={this.btnReset}>Reset<BiReset /></Button>
                         </div>
@@ -219,13 +221,15 @@ class StatusPage extends React.Component {
                     <div style={{ marginTop: "20px" }}>
                         {this.state.isLoading ? (
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Image src={lotteLoading} width={80} height={80} style={{ display: "flex", justifyContent: "center" }} />
+                                <Image src={lotteLoading} width={115} height={115} style={{ display: "flex", justifyContent: "center" }} />
                             </div>
                         ) : (
                             <div>
-                                {
-                                    this.state.report.length == 0 ? (
+                                {   
+                                       this.state.process === false ? (
                                         <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Select category to show data.</h4>
+                                    ) :  this.state.report.length === 0 ? (
+                                        <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Data not found.</h4>
                                     ) : this.printReport()
 
                                 }
@@ -242,9 +246,11 @@ class StatusPage extends React.Component {
 }
 
 const mapToProps = ({ userReducer }) => {
+    // console.log("cek histyr", userReducer.historyList)
     return {
         iduser: userReducer.userList.id,
+        history: userReducer.historyList
     }
 }
 
-export default connect(mapToProps, { userAction })(StatusPage);
+export default connect(mapToProps, { userAction, historyAction })(StatusPage);

@@ -1,7 +1,7 @@
 const INITIAL_STATE = {
     userList : [],
     reportList: [],
-    reportHistory: []
+    historyList: []
 }
 
 export const userReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +28,13 @@ export const userReducer = (state = INITIAL_STATE, action) => {
                 return {
                     ...state,
                     reportList: action.payload
+                }
+
+            case "GET_HISTORY" :
+                console.log("reducer HISTORY", action.payload)
+                return {
+                    ...state,
+                    historyList: action.payload
                 }
 
 

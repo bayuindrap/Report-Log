@@ -82,7 +82,10 @@ class TrackingPage extends React.Component {
                     return true;
                 });
                 console.log("data filter report", filteredReport, statusActive);
-                this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+                // this.setState({ report: filteredReport, statusIdx: statusActive, isLoading: false });
+                setTimeout(() => {
+                    this.setState({ isLoading: false, report: filteredReport, statusIdx: statusActive });
+                }, 1150);
             })
             .catch((err) => {
                 console.log(err);
@@ -222,7 +225,7 @@ class TrackingPage extends React.Component {
                     <div style={{ marginTop: "20px" }}>
                         {this.state.isLoading ? (
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <Image src={lotteLoading} width={80} height={80} style={{ display: "flex", justifyContent: "center" }} />
+                                <Image src={lotteLoading} width={105} height={105} style={{ display: "flex", justifyContent: "center" }} />
                             </div>
                         ) : (
                             <div>

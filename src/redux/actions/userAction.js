@@ -57,31 +57,50 @@ export const userAction = () => {
     }
 }
 
-export const reportAction = (name) => {
+// export const reportAction = (handleby) => {
+//     return async (dispatch) => {
+//         try {
+//             // console.log("data report", name)
+//             let res;
+//             if(handleby) {
+//                 res = await axios.get(`${API_URL}/report?handleby=${handleby}`)
+//             } else {
+//                  res = await axios.get(`${API_URL}/report`)
+//             }
+//             dispatch({
+//                 type: "GET_REPORT",
+//                 payload: res.data
+//             })
+//         }catch(error) {
+//             console.log(error)
+//         }
+//     }
+// }
+
+export const reportAction = (handleby) => {
     return async (dispatch) => {
-        try {
-            console.log("data report", name)
-            let res;
-            if(name) {
-                res = await axios.get(`${API_URL}/report?name=${name}`)
-            } else {
-                 res = await axios.get(`${API_URL}/report`)
-            }
-            dispatch({
-                type: "GET_REPORT",
-                payload: res.data
-            })
-        }catch(error) {
-            console.log(error)
+      try {
+        let res;
+        if (handleby) {
+          res = await axios.get(`${API_URL}/report?handleby=${handleby}`);
+        } else {
+          res = await axios.get(`${API_URL}/report`);
         }
-    }
-}
+        dispatch({
+          type: "GET_REPORT",
+          payload: res.data,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  };
 
 
-export const historyAction = () => {
+export const historyAction = (iduser) => {
     return async (dispatch) => {
         try {
-            let res = await axios.get(`${API_URL}/report?iduser=${this.props.iduser}`)
+            let res = await axios.get(`${API_URL}/report?iduser=${iduser}`)
             console.log("data report", res.data)
             dispatch({
                 type: "GET_HISTORY",
