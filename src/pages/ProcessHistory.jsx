@@ -1,9 +1,10 @@
 import React from 'react';
-import { reportAction } from '../redux/actions';
+import { reportAction, userAction } from '../redux/actions';
 import {Badge} from 'reactstrap'
 import { connect } from 'react-redux';
 import { API_URL } from '../helper';
 import axios from "axios"
+
 
 
 
@@ -25,25 +26,26 @@ class ProcessHistory extends React.Component {
     }
 
     componentDidMount() {
-        this.getData()
+        // this.getData()
     }
 
 
-    getData = () => {
-        axios.get(`${API_URL}/report?handleby=${this.props.username}`)
-        .then((res) => {
-            console.log("asasd",res.data)
-        }).catch((err) => {
-            console.log(err)
-        })
-    }
+    // getData = () => {
+    //     axios.get(`${API_URL}/report?handleby=${this.props.username}`)
+    //     .then((res) => {
+    //         console.log("asasd",res.data)
+    //     }).catch((err) => {
+    //         console.log(err)
+    //     })
+    // }
     
-    componentDidMount() {
-      const { handleby } = this.props.username
-      this.props.reportAction(handleby)
-    }
+    // componentDidMount() {
+    //   const { handleby } = this.props.username
+    //   this.props.reportAction(handleby)
+    // }
 
     printReport = () => {
+        const {username} = this.props
         // const renderValue = (label, field) => {
         //     if (field && field.trim() !== "") {
         //         return <p>{field} : {label}</p>;
@@ -59,53 +61,53 @@ class ProcessHistory extends React.Component {
             return null;
         };
         return this.props.report.map((value, index) => {
-
-            if (value.status === "Solved✔") {
-                return <div></div>
+            console.log("handle", value.handledby)
+            if (value.status === "Solved✔" || value.status === "On Check🔎") {
+                return null
             }
 
-
-            let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
-
-            // if(this.props.report.length ==)
-
-            return (
-
-                <div className='shadow pb-3 rounded mb-5'>
-                    <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
-                        <b>{value.name}'s Report</b>
-                        <b> | {value.orderid}</b>
-                        <b> | {value.corp} Corp</b>
-                        <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
-                    </div>
-
-                    <div className='col'>
-                        <div className='p-2'>
-                            <div>
-                                {/* <p> INVOICE NO : {value.invoice}</p>
-                                <p> PRODUCT CODE : {value.productcd}</p>
-                                <p> TRANSACTION DATE : {value.datetransaction}</p>
-                                <p> REPORT DATE : {value.reportdate}</p>
-                                <p> DETAIL CASE : {value.detail}</p> */}
-                                {renderValue(value.invoice, "INVOICE NO")}
-                                {renderValue(value.productcd, "PRODUCT CODE")}
-                                {renderValue(value.datetransaction, "TRANSACTION DATE")}
-                                {renderValue(value.reportdate, "REPORT DATE")}
-                                {renderValue(value.detail, "DETAIL CASE")}
-                            </div>
-                        </div>
-
-                       
-
-                    </div>
-
-                   
-                    <div>
-
-                    </div>
-                </div>
-
-            )
+            if (value.handledby !== this.props.username) {
+               return null
+              }
+                  let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
+      
+                  // if(this.props.report.length ==)
+      
+                  return (
+      
+                      <div className='shadow pb-3 rounded mb-5'>
+                          <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
+                              <b>You Handle {value.name}'s Report</b>
+                              <b> | {value.orderid}</b>
+                              <b> | {value.corp} Corp</b>
+                              <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
+                          </div>
+      
+                          <div className='col'>
+                              <div className='p-2'>
+                                  <div>
+                                      {renderValue(value.invoice, "INVOICE NO")}
+                                      {renderValue(value.productcd, "PRODUCT CODE")}
+                                      {renderValue(value.datetransaction, "TRANSACTION DATE")}
+                                      {renderValue(value.reportdate, "REPORT DATE")}
+                                      {renderValue(value.detail, "DETAIL CASE")}
+                                  </div>
+                              </div>
+      
+                             
+      
+                          </div>
+      
+                         
+                          <div>
+      
+                          </div>
+                      </div>
+      
+      
+      
+                  )
+              
         })
     }
 
@@ -133,14 +135,16 @@ class ProcessHistory extends React.Component {
 }
 
 const mapToProps = ({ userReducer }) => {
-    
+    console.log("asdf", userReducer.userList.username)
     return {
         report: userReducer.reportList,
         username: userReducer.userList.username,
+        iduser: userReducer.userList.id,
+        id: userReducer.reportList.iduser
     }
 }
  
-export default connect(mapToProps, {reportAction})(ProcessHistory);
+export default connect(mapToProps, {reportAction, userAction})(ProcessHistory);
 
 // const ProcessHistory = () => {
 

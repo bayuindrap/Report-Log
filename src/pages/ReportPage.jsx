@@ -163,10 +163,10 @@ class ReportPage extends React.Component {
             .then(() => {
                 setTimeout(() => {
                     this.setState({ isLoading: false, isFiltered: true });
-                    if(this.props.report.length === 0) {
-                        this.setState({dataAvailable: false})
-                    }else{
+                    if(this.props.report.length !== 0) {
                         this.setState({dataAvailable: true})
+                    }else{
+                        this.setState({dataAvailable: false})
                     }
                 }, 1100);
             })
@@ -344,6 +344,7 @@ class ReportPage extends React.Component {
             }
             return null;
         };
+        
         return this.props.report.map((value, index) => {
 
             if (value.status === "Solved✔") {

@@ -77,12 +77,15 @@ export const userAction = () => {
 //     }
 // }
 
-export const reportAction = (handleby) => {
+export const reportAction = (name, iduser) => {
     return async (dispatch) => {
       try {
+        console.log("search", name)
         let res;
-        if (handleby) {
-          res = await axios.get(`${API_URL}/report?handleby=${handleby}`);
+        if (name) {
+          res = await axios.get(`${API_URL}/report?name=${name}`);
+        } else if (iduser) {
+          res = await axios.get(`${API_URL}/report?iduser=${iduser}`);
         } else {
           res = await axios.get(`${API_URL}/report`);
         }

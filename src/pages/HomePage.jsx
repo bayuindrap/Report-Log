@@ -102,7 +102,7 @@ class HomePage extends React.Component {
 
     btnSubmit = () => {
         const dateToSend = this.state.selectedDate ? this.state.selectedDate.toLocaleDateString() : "";
-        if (this.state.selectedValue === "") {
+        if (this.state.selectedValue === "" || this.caseDesc.value === "") {
             // alert("isi semua data report")
             return Swal.fire({
                 position: 'center',

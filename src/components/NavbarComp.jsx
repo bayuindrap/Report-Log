@@ -11,6 +11,9 @@ import { BsTable, BsCardChecklist } from "react-icons/bs";
 import { FaUserCircle } from 'react-icons/fa';
 import { FaRegDotCircle } from "react-icons/fa";
 import { Redirect } from 'react-router-dom';
+import avaSuper from "../assets/superadmin.png"
+import avaUser from "../assets/users.png"
+
 
 
 
@@ -25,11 +28,10 @@ class NavbarComp extends React.Component {
     }
 
     render() {
-        // console.log("asd", this.props.role)
         const isAdmin = this.props.role === "superadmin"
         const isLogin = this.props.iduser === "" || this.props.username === undefined
         const homePageLink = isLogin ? "/" : (isAdmin ? "/report-page" : "/home-page")
-
+        const avatar = this.props.role === "superadmin" ? avaSuper : avaUser
         // if(isLogin && homePageLink === "/home-page"){
         //     return <Redirect to="/"/>
         // }
@@ -64,7 +66,7 @@ class NavbarComp extends React.Component {
                                         Hello, {this.props.username}
                                         <img
                                             className="avatar-icon"
-                                            src={this.props.avatar}
+                                            src={avatar}
                                             alt="Profile Picture"
                                             style={{ marginLeft: "5px", width: "35px", height: "35px", borderRadius: "50%" }}
                                         />
