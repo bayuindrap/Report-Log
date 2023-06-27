@@ -14,7 +14,7 @@ class TrackingPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["All Report", "On Check", "On Progress", "Solved"],
             report: [],
             statusIdx: 0,
             isLoading: false
@@ -110,18 +110,20 @@ class TrackingPage extends React.Component {
             }
             return null;
         };
-        
+
         return this.state.report.map((value, index) => {
             if (value.name) {
 
-                let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
+                let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
 
                 return (
                     <div className='shadow pb-3 rounded mb-5'>
-                        <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
+                        <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#ADADAD" }}>
                             <b>{value.name}'s Report</b>
-                            <b> | {value.orderid}</b>
-                            <b> | {value.corp} Corp</b>
+                            {
+                                value.orderid !== "" ? <b> / {value.orderid}</b> : null
+                            }
+                            <b> / {value.corp} Corp</b>
                             <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
                         </div>
 
@@ -138,7 +140,7 @@ class TrackingPage extends React.Component {
                                     {renderValue(value.productcd, "PRODUCT CODE")}
                                     {renderValue(value.detail, "DETAIL CASE")}
                                     {
-                                        value.status == "Solved✔" && (
+                                        value.status == "Solved" && (
                                             <div>
                                                 <p> ROOT CAUSE : {value.cause}</p>
                                                 <p> SOLUTION : {value.solution}</p>
@@ -219,7 +221,7 @@ class TrackingPage extends React.Component {
                     )}
                     {!isReportEmpty && !process &&
                         <div className='d-flex justify-content-center'>
-                            <Button color="warning" style={{ marginTop: 15, width: 127 }} onClick={this.btnReset}>Reset<BiReset /></Button>
+                            <Button className="hvr-grow" color="warning" style={{ marginTop: 15, width: 127, borderRadius: "18px" }} onClick={this.btnReset}>Reset<BiReset /></Button>
                         </div>
                     }
                     <div style={{ marginTop: "20px" }}>

@@ -16,7 +16,7 @@ class StatusPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["All Report", "On Check", "On Progress", "Solved"],
             report: [],
             statusIdx: 0,
             isLoading: false,
@@ -79,7 +79,7 @@ class StatusPage extends React.Component {
                     this.setState({ isLoading: false, report: filteredReport, statusIdx: statusActive, process: true });
                     console.log("isi state report", this.state.report)
                 }, 1150);
-                
+
             })
             .catch((err) => {
                 console.log(err);
@@ -105,16 +105,18 @@ class StatusPage extends React.Component {
             }
             return null
         };
-        
+
         return this.state.report.map((value, index) => {
             console.log("isi value", value)
             let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
 
             return <div className='shadow pb-3 rounded mb-5'>
-                <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
-                    <b> Your Report</b>
-                    <b> | {value.orderid}</b>
-                    <b> | {value.corp} Corp</b>
+                <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#ADADAD" }}>
+                    <b>{value.name}'s Report</b>
+                    {
+                        value.orderid !== "" ? <b> / {value.orderid}</b> : null
+                    }
+                    <b> / {value.corp} Corp</b>
                     <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
                 </div>
 
@@ -131,7 +133,7 @@ class StatusPage extends React.Component {
                             {renderValue(value.productcd, "PRODUCT CODE")}
                             {renderValue(value.detail, "DETAIL CASE")}
                             {
-                                value.status == "Solved✔" && <p>ROOT CAUSE : {value.cause}</p>
+                                value.status == "Solved" && <p>ROOT CAUSE : {value.cause}</p>
                             }
                         </div>
                     </div>
@@ -215,7 +217,7 @@ class StatusPage extends React.Component {
                     )}
                     {!isReportEmpty && (process || !process) &&
                         <div className='d-flex justify-content-center'>
-                            <Button color="warning" style={{ marginTop: 15, width: 127 }} onClick={this.btnReset}>Reset<BiReset /></Button>
+                            <Button color="warning" style={{ marginTop: 15, width: 127, borderRadius: "18px" }} onClick={this.btnReset}>Reset<BiReset /></Button>
                         </div>
                     }
                     <div style={{ marginTop: "20px" }}>
@@ -225,10 +227,10 @@ class StatusPage extends React.Component {
                             </div>
                         ) : (
                             <div>
-                                {   
-                                       this.state.process === false ? (
+                                {
+                                    this.state.process === false ? (
                                         <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Select category to show data.</h4>
-                                    ) :  this.state.report.length === 0 ? (
+                                    ) : this.state.report.length === 0 ? (
                                         <h4 style={{ textAlign: "center", marginTop: "200px", paddingBottom: "165px" }}>Data not found.</h4>
                                     ) : this.printReport()
 

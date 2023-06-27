@@ -1,7 +1,7 @@
 import React from 'react';
 import { API_URL } from '../helper';
 import axios from 'axios';
-import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText, Label } from 'reactstrap'
+import { Badge, Button, ModalHeader, ModalBody, ModalFooter, Input, InputGroupText, Label, ButtonGroup } from 'reactstrap'
 import { Form, InputGroup, FormGroup, Modal, FormControl, Image } from 'react-bootstrap';
 import Swal from 'sweetalert2'
 import { CgSandClock } from "react-icons/cg";
@@ -14,19 +14,21 @@ import lotteLoading from "../assets/Logo-Lotte.gif"
 import { AiTwotoneDelete } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { GiBroom } from "react-icons/gi";
+import '../product.css'
 
 
 class ReportPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            status: ["On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["On Check", "On Progress", "Solved"],
             dateNow: new Date(),
             modal: false,
             reportId: null,
             processedBy: null,
             isLoading: false,
-            dataAvailable: true
+            dataAvailable: true,
+            page: 1
         }
     }
 
@@ -49,7 +51,7 @@ class ReportPage extends React.Component {
 
     // btnProcess = (id) => {
     //     axios.patch(`${API_URL}/report/${id}`, {
-    //         status: "On Progress⏳",
+    //         status: "On Progress",
     //         // cause: this.rootCause.value,
     //         // solution: this.solution.value
     //         handledby: this.props.username
@@ -82,7 +84,7 @@ class ReportPage extends React.Component {
         });
         if(result.isConfirmed) {
             axios.patch(`${API_URL}/report/${id}`, {
-                status: "On Progress⏳",
+                status: "On Progress",
                 // cause: this.rootCause.value,
                 // solution: this.solution.value
                 handledby: this.props.username
@@ -109,7 +111,7 @@ class ReportPage extends React.Component {
     btnSolved = (id) => {
         const report = this.props.report.find((value) => value.id === id);
 
-        if (report.status === "On Check🔎") {
+        if (report.status === "On Check") {
             Swal.fire({
                 position: 'center',
                 icon: 'warning',
@@ -134,7 +136,7 @@ class ReportPage extends React.Component {
         // }
 
         axios.patch(`${API_URL}/report/${id}`, {
-            status: "Solved✔",
+            status: "Solved",
             solvedate: this.state.dateNow.toLocaleDateString(),
             cause: this.rootCause.value,
             solution: this.solution.value
@@ -231,7 +233,7 @@ class ReportPage extends React.Component {
         const { report, username } = this.props;
         const selectedReport = report.find((value) => value.id === id);
 
-        if (selectedReport.status === "On Check🔎") {
+        if (selectedReport.status === "On Check") {
             Swal.fire({
                 position: 'center',
                 icon: 'warning',
@@ -327,16 +329,26 @@ class ReportPage extends React.Component {
 
     }
 
-
+    // inputModal = () => {
+        
+    //         const { value: text } = Swal.fire({
+    //             input: 'textarea',
+    //             inputLabel: 'Message',
+    //             inputPlaceholder: 'Type your message here...',
+    //             inputAttributes: {
+    //               'aria-label': 'Type your message here'
+    //             },
+    //             showCancelButton: true
+    //           })
+              
+    //           if (text) {
+    //             Swal.fire(text)
+    //           }
+    
+    // }
 
     printReport = () => {
-        // const renderValue = (label, field) => {
-        //     if (field && field.trim() !== "") {
-        //         return <p>{field} : {label}</p>;
-        //     }
-        //     return null;
-        // };
-
+        let {page} =  this.state
 
         const renderValue = (field, label) => {
             if (field && field.trim() !== "") {
@@ -347,33 +359,28 @@ class ReportPage extends React.Component {
         
         return this.props.report.map((value, index) => {
 
-            if (value.status === "Solved✔") {
+            if (value.status === "Solved") {
                 return <div></div>
             }
 
 
-            let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
-
-            // if(this.props.report.length ==)
+            let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
 
             return (
-
+                // #ADADAD
                 <div className='shadow pb-3 rounded mb-5'>
-                    <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
+                    <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#ADADAD" }}>
                         <b>{value.name}'s Report</b>
-                        <b> | {value.orderid}</b>
-                        <b> | {value.corp} Corp</b>
+                        {
+                            value.orderid !== "" ? <b> / {value.orderid}</b> : null
+                        }
+                        <b> / {value.corp} Corp</b>
                         <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
                     </div>
 
                     <div className='col'>
                         <div className='p-2'>
                             <div>
-                                {/* <p> INVOICE NO : {value.invoice}</p>
-                                <p> PRODUCT CODE : {value.productcd}</p>
-                                <p> TRANSACTION DATE : {value.datetransaction}</p>
-                                <p> REPORT DATE : {value.reportdate}</p>
-                                <p> DETAIL CASE : {value.detail}</p> */}
                                 {renderValue(value.invoice, "INVOICE NO")}
                                 {renderValue(value.productcd, "PRODUCT CODE")}
                                 {renderValue(value.datetransaction, "TRANSACTION DATE")}
@@ -386,7 +393,7 @@ class ReportPage extends React.Component {
                             <img src={value.imgcorp} style={{ width: "23%" }} />
                             {this.props.role === 'superadmin' && (
 
-                                <AiTwotoneDelete style={{ fontSize: "20 px", marginLeft: "auto", maxWidth: "5%" }} onClick={() => this.btnDelete(value.id)} />
+                                <AiTwotoneDelete className="hvr-grow" style={{ fontSize: "20 px", marginLeft: "auto", maxWidth: "5%" }} onClick={() => this.btnDelete(value.id)} />
 
                             )}
                             {/* {
@@ -401,18 +408,16 @@ class ReportPage extends React.Component {
 
                     <div style={{ float: "right", marginTop: -30, marginRight: 5, display: "flex", alignItems: "center" }}>
 
-                        {["On Check🔎"].includes(value.status) && (
+                        {["On Check"].includes(value.status) && (
                             <div>
-                                {/* <Button color="warning" style={{ width: 110, color: "black" }} onClick={() => this.btnProcess(value.id)}><CgSandClock />Process</Button> */}
-                                <Button color="warning" style={{ width: 110, color: "black", borderRadius: 50 }} onClick={() => this.btnProcess(value.id)}>Process <CgSandClock /></Button>
-                                <Button color="success" style={{ width: 110, color: "black", borderRadius: 50 }} onClick={() => this.toggle(value.id)}>Solved <FaCheck /></Button>
-                                {/* <AiTwotoneDelete style={{ fontSize: "22px", marginLeft: 10 }} onClick={() => this.btnDelete(value.id)} /> */}
+                                <Button className="hvr-grow" color="warning" style={{ width: 110, color: "black", borderRadius: "18px", marginRight: 5 }} onClick={() => this.btnProcess(value.id)}>Process <CgSandClock /></Button>
+                                <Button className="hvr-grow" color="success" style={{ width: 110, color: "black", borderRadius: "18px"}} onClick={() => this.toggle(value.id)}>Solved <FaCheck /></Button>
                             </div>
                         )}
-                        {["On Progress⏳"].includes(value.status) && (
-                            <Button color="success" style={{ width: 110, color: "black", borderRadius: 50 }} onClick={() => this.toggle(value.id)}>Solved <FaCheck /></Button>
+                        {["On Progress"].includes(value.status) && (
+                            <Button className="hvr-grow" color="success" style={{ width: 110, color: "black", borderRadius: "18px"}} onClick={() => this.toggle(value.id)}>Solved <FaCheck /></Button>
                         )}
-                        {["Solved✔"].includes(value.status) && (
+                        {["Solved"].includes(value.status) && (
                             <div></div>
                         )}
 
@@ -447,6 +452,18 @@ class ReportPage extends React.Component {
         </div>
     }
 
+    btnPagination = () => {
+        let btn = [] 
+        for (let i = 0; i < Math.ceil(this.props.report.length / 6); i++){
+            btn.push(<Button 
+                outline color="" disabled={this.state.page == i + 1 ? true : false}
+                onClick={() => this.setState({ page: i + 1 })}>
+                {i+1}
+            </Button>)
+        }
+        return btn
+    }
+
 
 
 
@@ -462,14 +479,14 @@ class ReportPage extends React.Component {
                     <FormGroup>
                         <Label>Search</Label>
                         <Input type="text" id="text" placeholder="Input user name"
-                            style={{ width: 250, marginBottom: 5 }}
+                            style={{ width: 250, marginBottom: 5}}
                             innerRef={(element) => this.searchName = element}
                             onKeyDown={this.handleKeyPress}
                         />
                         {isFiltered && (
-                            <Button color="danger" onClick={this.btnClear} style={{width: 103}}>Clear<GiBroom /></Button>
+                            <Button className="hvr-grow" color="danger" onClick={this.btnClear} style={{width: 103, borderRadius: "18px", marginRight: 5}}>Clear<GiBroom /></Button>
                         )}
-                        <Button color="info" onClick={this.btnSearch} >Search <AiOutlineSearch /></Button>
+                        <Button className="hvr-grow" color="info" onClick={this.btnSearch} style={{borderRadius: "18px"}}>Search <AiOutlineSearch /></Button>
                     </FormGroup>
                 </div>
                 <div>
@@ -497,6 +514,12 @@ class ReportPage extends React.Component {
                     )
                     }
                 </div>
+
+                {/* <div style={{textAlign: "center"}}>
+                    <ButtonGroup>
+                        {this.btnPagination()}
+                    </ButtonGroup>
+                </div> */}
 
             </div>
 

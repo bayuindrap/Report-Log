@@ -20,7 +20,7 @@ class TableHistory extends React.Component {
         super(props);
         this.state = {
             report: [],
-            status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
+            status: ["All Report", "On Check", "On Progress", "Solved"],
             isLoading: false,
             statusIdx: 0,
             selectedValue: '',
@@ -130,7 +130,7 @@ class TableHistory extends React.Component {
                                         } */}
                                 </Col>
                             </Row>
-                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "65vh" }}>
+                            <div style={{ overflowX: "auto", maxWidth: "97vw", maxHeight: "72vh" }}>
 
 
                                 <Table striped bordered hover>
@@ -153,7 +153,7 @@ class TableHistory extends React.Component {
                                     <tbody>
                                         {
                                             this.state.report.map((value, index) => (
-                                                // let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
+                                                // let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
 
                                                 <tr key={index}>
 
@@ -184,11 +184,17 @@ class TableHistory extends React.Component {
     convertJsonToExcel = () => {
         const { report } = this.state;
 
+        // Exclude the "imgcorp" field from the report
+        const filteredReport = report.map(item => {
+            const { iduser, imgcorp, id,  ...rest } = item;
+            return rest;
+        });
+
         // Create a new workbook
         const workbook = XLSX.utils.book_new();
 
         // Convert the JSON array to a worksheet
-        const worksheet = XLSX.utils.json_to_sheet(report);
+        const worksheet = XLSX.utils.json_to_sheet(filteredReport);
 
         // Add the worksheet to the workbook
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -211,7 +217,7 @@ class TableHistory extends React.Component {
 
     btnReset = () => {
         this.setState({
-            report:[],
+            report: [],
             isLoading: false,
             statusIdx: 0,
             selectedValue: '',
@@ -250,26 +256,6 @@ class TableHistory extends React.Component {
 
                         }
                     </div>
-                    {/* <div className='row'>
-                        <div className="col" style={{ zIndex: 30 }}>
-                            <label>From Date: </label>
-                            <DatePicker selected={this.state.startDate}
-                                onChange={this.handleStartDateChange}
-                                style={{ width: '100%' }}
-                                popperPlacement="bottom-start"
-                                placeholderText="Choose a start date" />
-                        </div>
-                        <div className="col text-end" style={{ position: 'relative', zIndex: 20, marginLeft: 'auto' }}>
-                            <div className='auto'>
-                                <label>To Date: </label>
-                            </div>
-                            <DatePicker selected={this.state.endDate}
-                                onChange={this.handleEndDateChange}
-                                style={{ width: '100%' }}
-                                popperPlacement="bottom-start"
-                                placeholderText="Choose a end date" />
-                        </div>
-                    </div> */}
                     {showDatePickers && (
                         <div className="row">
                             <div className="col" style={{ zIndex: 30 }}>
@@ -299,12 +285,12 @@ class TableHistory extends React.Component {
                             </div>
                         </div>
                     )}
-                    {!isReportEmpty && !process && 
-                    <div className='d-flex justify-content-center'>
-                        <Button color="warning" style={{ marginTop: 15, marginRight: 5, width: 127 }} onClick={this.btnReset}>Reset<BiReset/></Button>
-                        <Button color="success" style={{ marginTop: 15, width: 127 }} onClick={this.handleDownload}>Download <FiDownload /></Button>
+                    {!isReportEmpty && !process &&
+                        <div className='d-flex justify-content-center'>
+                            <Button className="hvr-grow" color="warning" style={{ marginTop: 15, marginRight: 5, width: 127, borderRadius: "18px" }} onClick={this.btnReset}>Reset<BiReset /></Button>
+                            <Button className="hvr-grow" color="success" style={{ marginTop: 15, width: 127, borderRadius: "18px" }} onClick={this.handleDownload}>Download <FiDownload /></Button>
 
-                    </div>
+                        </div>
                     }
                     <div style={{ marginTop: "20px" }}>
                         {this.state.isLoading ? (

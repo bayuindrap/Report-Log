@@ -128,7 +128,7 @@ class HomePage extends React.Component {
                 // date: this.state.startDate2.toISOString().substring(0, 10),
                 reportdate: this.state.startDate2.toLocaleDateString(),
                 detail: this.caseDesc.value,
-                status: "On Check🔎"
+                status: "On Check"
             }).then((res) => {
                 // console.log("post report", res)
                 // console.log(res.data.detail.length > 1)

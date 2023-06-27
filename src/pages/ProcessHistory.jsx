@@ -62,25 +62,27 @@ class ProcessHistory extends React.Component {
         };
         return this.props.report.map((value, index) => {
             console.log("handle", value.handledby)
-            if (value.status === "Solved✔" || value.status === "On Check🔎") {
+            if (value.status === "Solved" || value.status === "On Check") {
                 return null
             }
 
             if (value.handledby !== this.props.username) {
                return null
               }
-                  let badgeColor = value.status.includes("On Progress⏳") ? "warning" : value.status.includes("Solved✔") ? "success" : "primary"
+                  let badgeColor = value.status.includes("On Progress") ? "warning" : value.status.includes("Solved") ? "success" : "primary"
       
                   // if(this.props.report.length ==)
       
                   return (
       
                       <div className='shadow pb-3 rounded mb-5'>
-                          <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#C9DBB2" }}>
-                              <b>You Handle {value.name}'s Report</b>
-                              <b> | {value.orderid}</b>
-                              <b> | {value.corp} Corp</b>
-                              <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
+                          <div className='shadow p-2 rounded mb-1' style={{ color: "black", backgroundColor: "#ADADAD" }}>
+                                 <b>{value.name}'s Report</b>
+                                    {
+                                        value.orderid !== "" ? <b> / {value.orderid}</b> : null
+                                     }
+                                <b> / {value.corp} Corp</b>
+                                 <b style={{ float: "right" }}><Badge color={badgeColor}>{value.status}</Badge></b>
                           </div>
       
                           <div className='col'>
@@ -124,7 +126,7 @@ class ProcessHistory extends React.Component {
         return (  
             <div className='container p-5 mt-4'>
                 <div className='text-center'>
-                <h1>Admin History Page</h1>
+                <h1>Admin History Report</h1>
                 </div>
                 <div>
                     {this.printReport()}

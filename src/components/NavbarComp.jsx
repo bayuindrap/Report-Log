@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, Navigate } from "react-router-dom";
-import { Button, Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, NavLink, UncontrolledDropdown, DropdownMenu, DropdownItem, NavbarText, DropdownToggle, Spinner } from "reactstrap";
+import { Button, Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, NavLink, UncontrolledDropdown, DropdownMenu, DropdownItem, NavbarText, DropdownToggle } from "reactstrap";
 import { connect } from "react-redux";
 import { logoutAction } from "../redux/actions";
 import { MdOutlineReportProblem } from "react-icons/md";
@@ -8,11 +8,11 @@ import { FiUsers, FiLogOut } from "react-icons/fi";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { GrStatusInfo } from "react-icons/gr";
 import { BsTable, BsCardChecklist } from "react-icons/bs";
-import { FaUserCircle } from 'react-icons/fa';
-import { FaRegDotCircle } from "react-icons/fa";
-import { Redirect } from 'react-router-dom';
+import lotteLoading from "../assets/Logo-Lotte.gif"
 import avaSuper from "../assets/superadmin.png"
 import avaUser from "../assets/users.png"
+import { Image } from 'react-bootstrap';
+import '../product.css'
 
 
 
@@ -20,25 +20,46 @@ import avaUser from "../assets/users.png"
 class NavbarComp extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            isLoading: false,
+            openCollapse: false
+        }
     }
 
     refreshPage = () => {
         window.location.reload()
     }
 
+    handlePageClick = () => {
+        this.setState({ isLoading: true }); // Set loading state to true when a page is clicked
+
+        // Perform any necessary loading operations here (e.g., API requests)
+
+        // Once the loading is complete, you can navigate to the desired page
+        // You can use the 'setTimeout' function as an example here to simulate a loading delay
+        setTimeout(() => {
+            // Navigate to the page here
+            // ...
+            this.setState({ isLoading: false }); // Set loading state back to false once loading is complete
+        }, 1500); // Example: Loading delay of 2 seconds
+
+        // Alternatively, you can use Promises or async/await to handle asynchronous operations
+    };
+
     render() {
         const isAdmin = this.props.role === "superadmin"
         const isLogin = this.props.iduser === "" || this.props.username === undefined
         const homePageLink = isLogin ? "/" : (isAdmin ? "/report-page" : "/home-page")
         const avatar = this.props.role === "superadmin" ? avaSuper : avaUser
+        const isLoading = this.state
         // if(isLogin && homePageLink === "/home-page"){
         //     return <Redirect to="/"/>
         // }
 
         return (
+
             <div>
-                <Navbar expand="md" fixed="top" color="light">
+                <Navbar className="shadow" expand="md" fixed="top" color="light">
                     <NavbarBrand>
                         <Link to={homePageLink}>
                             <img src="https://i.postimg.cc/X7sXFBSM/icon-lotte-logoshape.png" alt="logo-brand" width="40px" />
@@ -48,7 +69,7 @@ class NavbarComp extends React.Component {
                     <Collapse isOpen={this.state.openCollapse} navbar>
                         <Nav>
                             <NavItem>
-                                <Link className="nav-link" to={homePageLink} style={{ color: "#ED1C24" }}>
+                                <Link className="nav-link" to={homePageLink} style={{ color: "#ED1C24" }} onClick={this.handlePageClick}>
                                     Home Page
                                 </Link>
                             </NavItem>
@@ -76,12 +97,12 @@ class NavbarComp extends React.Component {
                                             ?
 
                                             <DropdownMenu right>
-                                                <Link to="/home-page" style={{ color: "#159953", textDecoration: "none" }}>
+                                                <Link to="/home-page" style={{ color: "#159953", textDecoration: "none" }} onClick={this.handlePageClick}>
                                                     <DropdownItem style={{ color: "#black" }}>
                                                         <MdOutlineReportProblem /> Report Page
                                                     </DropdownItem>
                                                 </Link>
-                                                <Link to="/status-page" style={{ color: "#159953", textDecoration: "none" }}>
+                                                <Link to="/status-page" style={{ color: "#159953", textDecoration: "none" }} onClick={this.handlePageClick}>
                                                     <DropdownItem style={{ color: "#black" }}>
                                                         <GrStatusInfo />   Status Page
                                                     </DropdownItem>
@@ -100,7 +121,7 @@ class NavbarComp extends React.Component {
                                             : this.props.role == "superadmin" ? (
 
                                                 <DropdownMenu right >
-                                                    <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link">
+                                                    <Link to="/report-page" style={{ color: "#159953", textDecoration: "none" }} className="nav-link" onClick={this.handlePageClick}>
                                                         <DropdownItem style={{ color: "#black" }}>
                                                             <MdOutlineReportProblem /> Report List
                                                         </DropdownItem>
@@ -186,6 +207,15 @@ class NavbarComp extends React.Component {
 
                     </Collapse>
                 </Navbar>
+                {/* {this.state.isLoading && (
+                    <div className="load">
+                        <div className="load">
+                            <Image src={lotteLoading} 
+                           
+                            alt="Loading..." />
+                        </div>
+                    </div>
+                )} */}
             </div>
         );
     }

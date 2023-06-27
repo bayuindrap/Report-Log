@@ -17,6 +17,16 @@ class FooterComp extends React.Component {
                 </div>
             </div>
 
+            // <div>
+            //     <div style={{ padding: "3%", background: '#F8F9FA', marginTop: '4%' }}>
+            //         <div style={{ margin: 'auto' }}>
+            //             <p> © 2023 PT. Lotte Indonesia. All rights reserved</p>
+            //         </div>
+
+            //     </div>
+
+            // </div>
+
         );
 
     }

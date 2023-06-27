@@ -13,7 +13,7 @@ class TableHistory extends React.Component {
     super(props);
     this.state = {
       report: [],
-      status: ["All Report", "On Check🔎", "On Progress⏳", "Solved✔"],
+      status: ["All Report", "On Check", "On Progress", "Solved"],
       isLoading: false,
       statusIdx: 0,
       selectedValue: '',
